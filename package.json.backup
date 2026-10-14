@@ -1,0 +1,11 @@
+{
+  "name": "FanSelection",
+  "version": "1.0.0",
+  "main": "fan.html",
+  "window": {
+    "title": "Fan selection",
+    "width": 1280,
+    "height": 800,
+    "icon": "app/SF.png"
+  }
+}
