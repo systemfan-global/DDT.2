@@ -100,7 +100,20 @@ details .fld{margin-top:8px}
 .barbtns{display:flex;gap:8px}
 .btn.alt{background:transparent;color:var(--accent);box-shadow:inset 0 0 0 1.5px var(--accent)}
 .btn:disabled{opacity:.45;cursor:not-allowed;filter:none}
-.folder{position:sticky;top:64px;max-height:calc(100vh - 80px);overflow:auto;display:flex;flex-direction:column;gap:10px}
+.fdcol{position:sticky;top:64px;display:flex;flex-direction:column;min-width:0}
+.folder{max-height:calc(100vh - 250px);overflow:auto;display:flex;flex-direction:column;gap:10px}
+.fd-boy{position:relative;z-index:3;margin:-14px auto 0;width:100%;pointer-events:none;text-align:center}
+#fdBoy{max-width:230px;margin:0 auto}
+.fd-bin{position:absolute;right:2px;bottom:26px;width:56px;transform-origin:50% 100%}
+.fd-bin .lid{transform-box:view-box;transform-origin:6px 18px;transition:transform .35s cubic-bezier(.3,1.5,.5,1)}
+.fd-bin.open .lid{transform:rotate(-62deg)}
+.fd-boy svg{display:block;overflow:visible;filter:drop-shadow(0 4px 5px rgba(0,0,0,.12))}
+.fd-boy .tremble{animation:bytremble .32s ease-in-out infinite}
+.fd-boy .sweat{animation:bysweat 1.4s ease-in infinite}
+.fd-say{margin:2px 0 0;font:600 12px/1.3 var(--font-ui);color:var(--muted)}
+@keyframes bytremble{0%,100%{transform:translateX(-1px)}50%{transform:translateX(1.2px)}}
+@keyframes bysweat{0%{transform:translateY(-3px)}100%{transform:translateY(12px)}}
+@media (prefers-reduced-motion:reduce){.fd-boy *{animation:none!important}}
 .fd-head{display:flex;align-items:center;gap:8px;color:var(--accent)}
 .fd-head svg{width:20px;height:20px;flex:none}
 .fd-head input{flex:1;min-width:0;font:600 14px/1.2 var(--font-ui);color:var(--fg);background:var(--field);border:1px solid var(--line);border-radius:6px;padding:7px 8px}
@@ -118,14 +131,34 @@ details .fld{margin-top:8px}
 .fd-msg{margin:0;font-size:12px;line-height:1.4;padding:8px 10px;border-radius:6px;background:var(--info-bg);color:var(--info)}
 .fd-msg.warn{background:var(--warn-bg);color:var(--warn)}
 .fd-msg.ok{color:var(--ok)}
-.fd-foot{display:flex;flex-direction:column;gap:8px;margin-top:2px}
+.fd-foot{display:flex;flex-direction:column;gap:8px;margin-top:2px;position:sticky;bottom:-16px;background:var(--panel);padding:8px 0 16px}
 .fd-foot .btn{justify-content:center}
 .fd-clear{border:0;background:none;color:var(--muted);font:500 12px/1 var(--font-ui);cursor:pointer;padding:6px;text-decoration:underline}
 .fd-clear.arm{color:var(--warn);font-weight:700}
 .fd-clear:disabled{opacity:.4;cursor:not-allowed}
 @media (min-width:1281px){.layout{grid-template-columns:minmax(300px,350px) minmax(0,1fr) minmax(270px,310px);max-width:1680px}}
-@media (min-width:901px) and (max-width:1280px){.folder{grid-column:1/-1;position:static;max-height:none}}
-@media (max-width:900px){.folder{position:static;max-height:none}.barbtns .btn{padding:9px 11px}}
+@media (min-width:901px) and (max-width:1280px){.fdcol{grid-column:1/-1;position:static}.folder{max-height:none}}
+@media (max-width:900px){.fdcol{position:static}.folder{max-height:none}.barbtns .btn{padding:9px 11px}}
+
+
+/* ---------- nền động nhẹ: quạt, gió, mây ---------- */
+.layout,.bar{position:relative;z-index:1}
+.bar{z-index:5}
+.panel{background:color-mix(in srgb,var(--panel) 86%,transparent);backdrop-filter:blur(8px)}
+.sheet{background:#fff}
+
+/* ---------- nền động: ảnh kỹ thuật + cánh quạt quay nhẹ + làn gió ---------- */
+#bg{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;background:#eaf3f9}
+#bg svg{position:absolute;inset:0;display:block}
+.bgFan{animation:bgspin 75s linear infinite}
+.bgW{stroke:#3fb7ec;stroke-width:1.6;stroke-dasharray:110 520;opacity:.6;animation:bgwind linear infinite}
+.bgW.g{stroke-width:6;opacity:.12;filter:blur(2px)}
+@keyframes bgspin{to{transform:rotate(360deg)}}
+@keyframes bgwind{from{stroke-dashoffset:630}to{stroke-dashoffset:0}}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) #bg{background:#0d1a24}:root:not([data-theme="light"]) .bgBase,:root:not([data-theme="light"]) .bgBlue{filter:brightness(.3) saturate(.8)}}
+:root[data-theme="dark"] #bg{background:#0d1a24}:root[data-theme="dark"] .bgBase,:root[data-theme="dark"] .bgBlue{filter:brightness(.3) saturate(.8)}
+@media (prefers-reduced-motion:reduce){#bg *{animation:none!important}}
+@media print{#bg{display:none!important}}
 
 /* ẨN khỏi giao diện: khung gợi ý (#notes) và khung kết quả điểm làm việc (#result).
    Code tính toán vẫn chạy bình thường, chỉ không hiển thị. Muốn hiện lại: xoá dòng bên dưới. */
@@ -171,6 +204,38 @@ details .fld{margin-top:8px}
 </style>
 </head>
 <body>
+<div id="bg" aria-hidden="true"><svg id="bgSvg" viewBox="0 0 1725 912" preserveAspectRatio="xMidYMid slice" width="100%" height="100%"><defs><linearGradient id="skyG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f5fafd"/><stop offset=".55" stop-color="#e9f4fa"/><stop offset="1" stop-color="#dcecf6"/></linearGradient>
+<pattern id="gm" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M24 0H0V24" fill="none" stroke="#8fbcd8" stroke-opacity=".2" stroke-width=".7"/></pattern>
+<pattern id="gM" width="120" height="120" patternUnits="userSpaceOnUse"><path d="M120 0H0V120" fill="none" stroke="#7fb1d2" stroke-opacity=".3" stroke-width=".9"/></pattern>
+<radialGradient id="vigR" cx="1750" cy="400" r="760" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#4f9fd0" stop-opacity=".78"/><stop offset=".45" stop-color="#7db9dd" stop-opacity=".35"/><stop offset="1" stop-color="#bfdff0" stop-opacity="0"/></radialGradient>
+<radialGradient id="vigBL" cx="0" cy="920" r="620" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#5fb1de" stop-opacity=".7"/><stop offset="1" stop-color="#bfe0f2" stop-opacity="0"/></radialGradient>
+<radialGradient id="vigBR" cx="1725" cy="912" r="430" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#3f8fc4" stop-opacity=".6"/><stop offset="1" stop-color="#9ccbe6" stop-opacity="0"/></radialGradient><linearGradient id="blG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f3f9fd" stop-opacity=".85"/><stop offset="1" stop-color="#8fc0de" stop-opacity=".55"/></linearGradient>
+<radialGradient id="hubG" cx=".4" cy=".35" r=".8"><stop offset="0" stop-color="#f7fbfe" stop-opacity=".95"/><stop offset="1" stop-color="#a9cfe7" stop-opacity=".85"/></radialGradient></defs>
+  <g class="bgBase">
+  <rect width="1725" height="912" fill="url(#skyG)"/>
+  <rect width="1725" height="912" fill="url(#vigR)"/><rect width="1725" height="912" fill="url(#vigBL)"/><rect width="1725" height="912" fill="url(#vigBR)"/>
+</g>
+<g class="bgBlue" fill="none" stroke="#5f9fc8" stroke-width="1.1" stroke-opacity=".6">
+  <circle cx="52" cy="148" r="108"/><circle cx="52" cy="148" r="72" stroke-dasharray="7 6" stroke-opacity=".5"/><circle cx="52" cy="148" r="44" stroke-opacity=".45"/>
+  <path d="M52 30V300M0 148H290M170 18V240M0 302H140" stroke-opacity=".5"/><path d="M193 75H327" stroke-dasharray="8 5"/>
+  <path d="M0 480 103 378" stroke-opacity=".6"/><path d="M0 563H216M0 657H96" stroke-opacity=".25"/>
+  <path d="M507 60H563M535 32V88" stroke-opacity=".7"/><path d="M84 657H108M96 645V669" stroke-opacity=".6"/><path d="M205 563H227M216 552V574" stroke-opacity=".6"/>
+  <g fill="#fff" stroke-opacity=".75"><circle cx="82" cy="148" r="3.6"/><circle cx="159" cy="148" r="3.6"/><circle cx="171" cy="148" r="3.6"/><circle cx="141" cy="75" r="3.6"/><circle cx="52" cy="427" r="3.6"/><circle cx="103" cy="378" r="2.6" fill="#6aaed6"/></g>
+  <path d="M217 222 222 228 217 234 212 228Z" fill="#6aaed6"/>
+  <path d="M1378 850H1725M1650 790V912" stroke-opacity=".55"/><circle cx="1650" cy="912" r="62" stroke-opacity=".6"/><circle cx="1650" cy="912" r="38" stroke-dasharray="6 5" stroke-opacity=".5"/>
+  <g fill="#fff"><circle cx="1398" cy="850" r="3"/><circle cx="1420" cy="850" r="3"/><circle cx="1466" cy="850" r="3"/><circle cx="1590" cy="850" r="3.6"/><circle cx="1650" cy="850" r="3.6"/></g>
+  <path d="M1385 388H1725" stroke-opacity=".5"/><path d="M1737 60V716" stroke-opacity=".25" stroke-dasharray="5 7"/>
+</g>
+<g fill="none" stroke="#45b8ee" stroke-linecap="round" class="bgStatic"><path d="M-20 905 C 110 850, 250 735, 420 726 S 650 792, 790 816 S 1050 788, 1230 726 S 1430 640, 1540 590" stroke-width="1.2" stroke-opacity="0.5"/><path d="M-20 880 C 120 822, 270 718, 440 716 S 660 776, 800 800 S 1060 772, 1240 710 S 1440 624, 1560 572" stroke-width="0.8" stroke-opacity="0.28"/><path d="M30 912 C 150 850, 300 748, 470 742 S 690 800, 830 826 S 1090 796, 1270 735 S 1460 650, 1580 600" stroke-width="0.8" stroke-opacity="0.28"/><path d="M-20 860 C 130 800, 290 700, 460 700 S 680 758, 820 784 S 1080 756, 1250 694 S 1450 608, 1580 556" stroke-width="1.2" stroke-opacity="0.5"/><path d="M860 292 C 1000 252, 1140 222, 1236 172 S 1340 100, 1400 86 S 1560 44, 1730 -8" stroke-width="0.8" stroke-opacity="0.28"/><path d="M900 300 C 1030 262, 1170 236, 1262 186 S 1380 118, 1440 104 S 1580 66, 1730 22" stroke-width="0.8" stroke-opacity="0.28"/><path d="M980 292 C 1100 268, 1210 250, 1290 204 S 1420 130, 1480 120 S 1620 92, 1730 60" stroke-width="1.2" stroke-opacity="0.5"/></g>
+  <g transform="translate(1737 388)"><g class="bgFan">
+  <circle r="314" fill="none" stroke="#7fb1d2" stroke-opacity=".55" stroke-width="1.6"/><circle r="298" fill="none" stroke="#9cc4de" stroke-opacity=".5" stroke-width="1"/>
+  <circle r="160" fill="none" stroke="#9cc4de" stroke-opacity=".35" stroke-width="1" stroke-dasharray="6 8"/>
+  <g transform="rotate(0)"><path d="M-15 -72 C -52 -122 -74 -212 -36 -292 C -16 -302 8 -300 20 -288 C 34 -212 32 -132 15 -72Z" fill="url(#blG)" stroke="#7fb1d2" stroke-width="1.3" stroke-opacity=".85"/><path d="M-4 -90 C -22 -140 -30 -210 -14 -282" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="2"/></g><g transform="rotate(36)"><path d="M-15 -72 C -52 -122 -74 -212 -36 -292 C -16 -302 8 -300 20 -288 C 34 -212 32 -132 15 -72Z" fill="url(#blG)" stroke="#7fb1d2" stroke-width="1.3" stroke-opacity=".85"/><path d="M-4 -90 C -22 -140 -30 -210 -14 -282" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="2"/></g><g transform="rotate(72)"><path d="M-15 -72 C -52 -122 -74 -212 -36 -292 C -16 -302 8 -300 20 -288 C 34 -212 32 -132 15 -72Z" fill="url(#blG)" stroke="#7fb1d2" stroke-width="1.3" stroke-opacity=".85"/><path d="M-4 -90 C -22 -140 -30 -210 -14 -282" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="2"/></g><g transform="rotate(108)"><path d="M-15 -72 C -52 -122 -74 -212 -36 -292 C -16 -302 8 -300 20 -288 C 34 -212 32 -132 15 -72Z" fill="url(#blG)" stroke="#7fb1d2" stroke-width="1.3" stroke-opacity=".85"/><path d="M-4 -90 C -22 -140 -30 -210 -14 -282" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="2"/></g><g transform="rotate(144)"><path d="M-15 -72 C -52 -122 -74 -212 -36 -292 C -16 -302 8 -300 20 -288 C 34 -212 32 -132 15 -72Z" fill="url(#blG)" stroke="#7fb1d2" stroke-width="1.3" stroke-opacity=".85"/><path d="M-4 -90 C -22 -140 -30 -210 -14 -282" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="2"/></g><g transform="rotate(180)"><path d="M-15 -72 C -52 -122 -74 -212 -36 -292 C -16 -302 8 -300 20 -288 C 34 -212 32 -132 15 -72Z" fill="url(#blG)" stroke="#7fb1d2" stroke-width="1.3" stroke-opacity=".85"/><path d="M-4 -90 C -22 -140 -30 -210 -14 -282" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="2"/></g><g transform="rotate(216)"><path d="M-15 -72 C -52 -122 -74 -212 -36 -292 C -16 -302 8 -300 20 -288 C 34 -212 32 -132 15 -72Z" fill="url(#blG)" stroke="#7fb1d2" stroke-width="1.3" stroke-opacity=".85"/><path d="M-4 -90 C -22 -140 -30 -210 -14 -282" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="2"/></g><g transform="rotate(252)"><path d="M-15 -72 C -52 -122 -74 -212 -36 -292 C -16 -302 8 -300 20 -288 C 34 -212 32 -132 15 -72Z" fill="url(#blG)" stroke="#7fb1d2" stroke-width="1.3" stroke-opacity=".85"/><path d="M-4 -90 C -22 -140 -30 -210 -14 -282" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="2"/></g><g transform="rotate(288)"><path d="M-15 -72 C -52 -122 -74 -212 -36 -292 C -16 -302 8 -300 20 -288 C 34 -212 32 -132 15 -72Z" fill="url(#blG)" stroke="#7fb1d2" stroke-width="1.3" stroke-opacity=".85"/><path d="M-4 -90 C -22 -140 -30 -210 -14 -282" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="2"/></g><g transform="rotate(324)"><path d="M-15 -72 C -52 -122 -74 -212 -36 -292 C -16 -302 8 -300 20 -288 C 34 -212 32 -132 15 -72Z" fill="url(#blG)" stroke="#7fb1d2" stroke-width="1.3" stroke-opacity=".85"/><path d="M-4 -90 C -22 -140 -30 -210 -14 -282" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="2"/></g>
+  <circle r="78" fill="url(#hubG)" stroke="#7fb1d2" stroke-width="1.5" stroke-opacity=".8"/><circle r="58" fill="none" stroke="#fff" stroke-opacity=".6" stroke-width="2"/>
+  <circle r="24" fill="#dcecf6" stroke="#7fb1d2" stroke-width="1.5"/><circle cx="40.0" cy="0.0" r="3.2" fill="#8fbad6"/><circle cx="20.0" cy="34.6" r="3.2" fill="#8fbad6"/><circle cx="-20.0" cy="34.6" r="3.2" fill="#8fbad6"/><circle cx="-40.0" cy="0.0" r="3.2" fill="#8fbad6"/><circle cx="-20.0" cy="-34.6" r="3.2" fill="#8fbad6"/><circle cx="20.0" cy="-34.6" r="3.2" fill="#8fbad6"/>
+</g></g>
+  <g fill="none" stroke-linecap="round"><path class="bgW g" d="M-20 905 C 110 850, 250 735, 420 726 S 650 792, 790 816 S 1050 788, 1230 726 S 1430 640, 1540 590" style="animation-duration:8.0s;animation-delay:-0.0s"/><path class="bgW" d="M-20 905 C 110 850, 250 735, 420 726 S 650 792, 790 816 S 1050 788, 1230 726 S 1430 640, 1540 590" style="animation-duration:8.0s;animation-delay:-0.0s"/><path class="bgW g" d="M-20 880 C 120 822, 270 718, 440 716 S 660 776, 800 800 S 1060 772, 1240 710 S 1440 624, 1560 572" style="animation-duration:9.7s;animation-delay:-7.4s"/><path class="bgW" d="M-20 880 C 120 822, 270 718, 440 716 S 660 776, 800 800 S 1060 772, 1240 710 S 1440 624, 1560 572" style="animation-duration:9.7s;animation-delay:-7.4s"/><path class="bgW g" d="M30 912 C 150 850, 300 748, 470 742 S 690 800, 830 826 S 1090 796, 1270 735 S 1460 650, 1580 600" style="animation-duration:11.4s;animation-delay:-6.8s"/><path class="bgW" d="M30 912 C 150 850, 300 748, 470 742 S 690 800, 830 826 S 1090 796, 1270 735 S 1460 650, 1580 600" style="animation-duration:11.4s;animation-delay:-6.8s"/><path class="bgW g" d="M-20 860 C 130 800, 290 700, 460 700 S 680 758, 820 784 S 1080 756, 1250 694 S 1450 608, 1580 556" style="animation-duration:13.1s;animation-delay:-6.2s"/><path class="bgW" d="M-20 860 C 130 800, 290 700, 460 700 S 680 758, 820 784 S 1080 756, 1250 694 S 1450 608, 1580 556" style="animation-duration:13.1s;animation-delay:-6.2s"/><path class="bgW g" d="M860 292 C 1000 252, 1140 222, 1236 172 S 1340 100, 1400 86 S 1560 44, 1730 -8" style="animation-duration:8.8s;animation-delay:-8.4s"/><path class="bgW" d="M860 292 C 1000 252, 1140 222, 1236 172 S 1340 100, 1400 86 S 1560 44, 1730 -8" style="animation-duration:8.8s;animation-delay:-8.4s"/><path class="bgW g" d="M900 300 C 1030 262, 1170 236, 1262 186 S 1380 118, 1440 104 S 1580 66, 1730 22" style="animation-duration:10.5s;animation-delay:-9.5s"/><path class="bgW" d="M900 300 C 1030 262, 1170 236, 1262 186 S 1380 118, 1440 104 S 1580 66, 1730 22" style="animation-duration:10.5s;animation-delay:-9.5s"/><path class="bgW g" d="M980 292 C 1100 268, 1210 250, 1290 204 S 1420 130, 1480 120 S 1620 92, 1730 60" style="animation-duration:12.2s;animation-delay:-10.6s"/><path class="bgW" d="M980 292 C 1100 268, 1210 250, 1290 204 S 1420 130, 1480 120 S 1620 92, 1730 60" style="animation-duration:12.2s;animation-delay:-10.6s"/></g><circle r="2.0" fill="#4fc3f0"><animateMotion dur="10.0s" begin="-0.0s" repeatCount="indefinite" path="M-20 905 C 110 850, 250 735, 420 726 S 650 792, 790 816 S 1050 788, 1230 726 S 1430 640, 1540 590"/><animate attributeName="opacity" values="0;.85;.85;0" keyTimes="0;.15;.85;1" dur="10.0s" begin="-0.0s" repeatCount="indefinite"/></circle><circle r="2.6" fill="#4fc3f0"><animateMotion dur="13.0s" begin="-5.0s" repeatCount="indefinite" path="M-20 905 C 110 850, 250 735, 420 726 S 650 792, 790 816 S 1050 788, 1230 726 S 1430 640, 1540 590"/><animate attributeName="opacity" values="0;.85;.85;0" keyTimes="0;.15;.85;1" dur="13.0s" begin="-5.0s" repeatCount="indefinite"/></circle><circle r="2.0" fill="#4fc3f0"><animateMotion dur="10.9s" begin="-1.9s" repeatCount="indefinite" path="M-20 880 C 120 822, 270 718, 440 716 S 660 776, 800 800 S 1060 772, 1240 710 S 1440 624, 1560 572"/><animate attributeName="opacity" values="0;.85;.85;0" keyTimes="0;.15;.85;1" dur="10.9s" begin="-1.9s" repeatCount="indefinite"/></circle><circle r="2.6" fill="#4fc3f0"><animateMotion dur="13.9s" begin="-6.9s" repeatCount="indefinite" path="M-20 880 C 120 822, 270 718, 440 716 S 660 776, 800 800 S 1060 772, 1240 710 S 1440 624, 1560 572"/><animate attributeName="opacity" values="0;.85;.85;0" keyTimes="0;.15;.85;1" dur="13.9s" begin="-6.9s" repeatCount="indefinite"/></circle><circle r="2.0" fill="#4fc3f0"><animateMotion dur="11.8s" begin="-3.8s" repeatCount="indefinite" path="M30 912 C 150 850, 300 748, 470 742 S 690 800, 830 826 S 1090 796, 1270 735 S 1460 650, 1580 600"/><animate attributeName="opacity" values="0;.85;.85;0" keyTimes="0;.15;.85;1" dur="11.8s" begin="-3.8s" repeatCount="indefinite"/></circle><circle r="2.6" fill="#4fc3f0"><animateMotion dur="14.8s" begin="-8.8s" repeatCount="indefinite" path="M30 912 C 150 850, 300 748, 470 742 S 690 800, 830 826 S 1090 796, 1270 735 S 1460 650, 1580 600"/><animate attributeName="opacity" values="0;.85;.85;0" keyTimes="0;.15;.85;1" dur="14.8s" begin="-8.8s" repeatCount="indefinite"/></circle><circle r="2.0" fill="#4fc3f0"><animateMotion dur="12.7s" begin="-5.7s" repeatCount="indefinite" path="M-20 860 C 130 800, 290 700, 460 700 S 680 758, 820 784 S 1080 756, 1250 694 S 1450 608, 1580 556"/><animate attributeName="opacity" values="0;.85;.85;0" keyTimes="0;.15;.85;1" dur="12.7s" begin="-5.7s" repeatCount="indefinite"/></circle><circle r="2.6" fill="#4fc3f0"><animateMotion dur="15.7s" begin="-10.7s" repeatCount="indefinite" path="M-20 860 C 130 800, 290 700, 460 700 S 680 758, 820 784 S 1080 756, 1250 694 S 1450 608, 1580 556"/><animate attributeName="opacity" values="0;.85;.85;0" keyTimes="0;.15;.85;1" dur="15.7s" begin="-10.7s" repeatCount="indefinite"/></circle><circle r="2.0" fill="#4fc3f0"><animateMotion dur="13.6s" begin="-7.6s" repeatCount="indefinite" path="M860 292 C 1000 252, 1140 222, 1236 172 S 1340 100, 1400 86 S 1560 44, 1730 -8"/><animate attributeName="opacity" values="0;.85;.85;0" keyTimes="0;.15;.85;1" dur="13.6s" begin="-7.6s" repeatCount="indefinite"/></circle><circle r="2.6" fill="#4fc3f0"><animateMotion dur="16.6s" begin="-12.6s" repeatCount="indefinite" path="M860 292 C 1000 252, 1140 222, 1236 172 S 1340 100, 1400 86 S 1560 44, 1730 -8"/><animate attributeName="opacity" values="0;.85;.85;0" keyTimes="0;.15;.85;1" dur="16.6s" begin="-12.6s" repeatCount="indefinite"/></circle><circle r="2.0" fill="#4fc3f0"><animateMotion dur="14.5s" begin="-9.5s" repeatCount="indefinite" path="M900 300 C 1030 262, 1170 236, 1262 186 S 1380 118, 1440 104 S 1580 66, 1730 22"/><animate attributeName="opacity" values="0;.85;.85;0" keyTimes="0;.15;.85;1" dur="14.5s" begin="-9.5s" repeatCount="indefinite"/></circle><circle r="2.6" fill="#4fc3f0"><animateMotion dur="17.5s" begin="-14.5s" repeatCount="indefinite" path="M900 300 C 1030 262, 1170 236, 1262 186 S 1380 118, 1440 104 S 1580 66, 1730 22"/><animate attributeName="opacity" values="0;.85;.85;0" keyTimes="0;.15;.85;1" dur="17.5s" begin="-14.5s" repeatCount="indefinite"/></circle><circle r="2.0" fill="#4fc3f0"><animateMotion dur="15.4s" begin="-11.4s" repeatCount="indefinite" path="M980 292 C 1100 268, 1210 250, 1290 204 S 1420 130, 1480 120 S 1620 92, 1730 60"/><animate attributeName="opacity" values="0;.85;.85;0" keyTimes="0;.15;.85;1" dur="15.4s" begin="-11.4s" repeatCount="indefinite"/></circle><circle r="2.6" fill="#4fc3f0"><animateMotion dur="18.4s" begin="-16.4s" repeatCount="indefinite" path="M980 292 C 1100 268, 1210 250, 1290 204 S 1420 130, 1480 120 S 1620 92, 1730 60"/><animate attributeName="opacity" values="0;.85;.85;0" keyTimes="0;.15;.85;1" dur="18.4s" begin="-16.4s" repeatCount="indefinite"/></circle>
+<path d="M0 0 L-11 -4 L-11 4Z" fill="#2fb1ec"><animateMotion dur="11.0s" begin="-0.0s" repeatCount="indefinite" rotate="auto" path="M-20 905 C 110 850, 250 735, 420 726 S 650 792, 790 816 S 1050 788, 1230 726 S 1430 640, 1540 590"/><animate attributeName="opacity" values="0;.9;.9;0" keyTimes="0;.12;.88;1" dur="11.0s" begin="-0.0s" repeatCount="indefinite"/></path><path d="M0 0 L-11 -4 L-11 4Z" fill="#2fb1ec"><animateMotion dur="12.3s" begin="-3.1s" repeatCount="indefinite" rotate="auto" path="M-20 880 C 120 822, 270 718, 440 716 S 660 776, 800 800 S 1060 772, 1240 710 S 1440 624, 1560 572"/><animate attributeName="opacity" values="0;.9;.9;0" keyTimes="0;.12;.88;1" dur="12.3s" begin="-3.1s" repeatCount="indefinite"/></path><path d="M0 0 L-11 -4 L-11 4Z" fill="#2fb1ec"><animateMotion dur="13.6s" begin="-6.2s" repeatCount="indefinite" rotate="auto" path="M30 912 C 150 850, 300 748, 470 742 S 690 800, 830 826 S 1090 796, 1270 735 S 1460 650, 1580 600"/><animate attributeName="opacity" values="0;.9;.9;0" keyTimes="0;.12;.88;1" dur="13.6s" begin="-6.2s" repeatCount="indefinite"/></path><path d="M0 0 L-11 -4 L-11 4Z" fill="#2fb1ec"><animateMotion dur="14.9s" begin="-9.3s" repeatCount="indefinite" rotate="auto" path="M-20 860 C 130 800, 290 700, 460 700 S 680 758, 820 784 S 1080 756, 1250 694 S 1450 608, 1580 556"/><animate attributeName="opacity" values="0;.9;.9;0" keyTimes="0;.12;.88;1" dur="14.9s" begin="-9.3s" repeatCount="indefinite"/></path><path d="M0 0 L-11 -4 L-11 4Z" fill="#2fb1ec"><animateMotion dur="16.2s" begin="-12.4s" repeatCount="indefinite" rotate="auto" path="M860 292 C 1000 252, 1140 222, 1236 172 S 1340 100, 1400 86 S 1560 44, 1730 -8"/><animate attributeName="opacity" values="0;.9;.9;0" keyTimes="0;.12;.88;1" dur="16.2s" begin="-12.4s" repeatCount="indefinite"/></path><path d="M0 0 L-11 -4 L-11 4Z" fill="#2fb1ec"><animateMotion dur="17.5s" begin="-15.5s" repeatCount="indefinite" rotate="auto" path="M900 300 C 1030 262, 1170 236, 1262 186 S 1380 118, 1440 104 S 1580 66, 1730 22"/><animate attributeName="opacity" values="0;.9;.9;0" keyTimes="0;.12;.88;1" dur="17.5s" begin="-15.5s" repeatCount="indefinite"/></path><path d="M0 0 L-11 -4 L-11 4Z" fill="#2fb1ec"><animateMotion dur="18.8s" begin="-18.6s" repeatCount="indefinite" rotate="auto" path="M980 292 C 1100 268, 1210 250, 1290 204 S 1420 130, 1480 120 S 1620 92, 1730 60"/><animate attributeName="opacity" values="0;.9;.9;0" keyTimes="0;.12;.88;1" dur="18.8s" begin="-18.6s" repeatCount="indefinite"/></path></svg></div>
 
 <header class="bar">
   <div class="barbtns">
@@ -220,7 +285,7 @@ details .fld{margin-top:8px}
     <details open>
       <summary>Thông tin trên phiếu</summary>
       <label class="fld"><span>Tên quạt</span><div class="inp"><input id="inModel" type="text" placeholder="Tự động" value=""></div></label>
-      <label class="fld"><span>Tốc độ hiển thị</span><div class="inp"><input id="inSpeedLabel" type="text" list="speedList" placeholder="Tự động" value="">
+      <label class="fld"><span>Tốc độ hiển thị</span><div class="inp"><input id="inSpeedLabel" type="text" list="speedList" placeholder="Để trống = không in" value="">
         <datalist id="speedList"><option value="4P"><option value="6P"><option value="4P/6P"><option value="1460 Rpm"><option value="970 Rpm"><option value="1460/970 Rpm"></datalist></div></label>
       <label class="fld"><span>Dự án</span><div class="inp"><input id="inProj" type="text" value="Fan Selection"></div></label>
       <label class="fld"><span>Mã hàng</span><div class="inp"><input id="inItem" type="text" value="Temp 1"></div></label>
@@ -253,6 +318,7 @@ details .fld{margin-top:8px}
     </article>
   </section>
 
+  <div class="fdcol noprint">
   <aside class="panel folder noprint" id="folder" aria-label="Thư mục PDF">
     <div class="fd-head">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
@@ -268,6 +334,13 @@ details .fld{margin-top:8px}
       <button type="button" class="fd-clear" id="fdClear" disabled>Xoá tất cả</button>
     </div>
   </aside>
+    <div class="fd-boy" aria-hidden="true"><div id="fdBoy"></div>
+      <div class="fd-bin" id="fdBin"><svg viewBox="0 0 60 74" width="100%"><defs><linearGradient id="binG" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#9fb0bd"/><stop offset=".5" stop-color="#cfdae2"/><stop offset="1" stop-color="#8498a8"/></linearGradient></defs>
+        <path d="M9 22 H51 L47 68 Q46.6 71 43.6 71 H16.4 Q13.4 71 13 68Z" fill="url(#binG)" stroke="#6f8494" stroke-width="1.5" stroke-linejoin="round"/>
+        <path d="M21 29 V63 M30 29 V63 M39 29 V63" stroke="#6f8494" stroke-width="2.4" stroke-linecap="round" opacity=".7"/>
+        <g class="lid"><rect x="3" y="14" width="54" height="8" rx="4" fill="#8498a8" stroke="#6f8494" stroke-width="1.5"/><rect x="23" y="8" width="14" height="7" rx="3" fill="#8498a8" stroke="#6f8494" stroke-width="1.5"/></g></svg></div>
+      <p id="fdSay" class="fd-say"></p></div>
+  </div>
 </main>
 
 <script>
@@ -564,7 +637,7 @@ function render(){
   const model = i.modelCustom ? i.modelCustom : autoModel;
   const proj = $('inProj').value, item =$('inItem').value, quote = $('inQuote').value, date =$('inDate').value;
   $('shProj').textContent = proj; $('shItem').textContent = item; $('shQuote').textContent = quote; $('shDate').textContent = date;
-  $('shModel').textContent = model; $('shRpm').textContent = i.speedCustom ? i.speedCustom : Math.round(i.rpm) + ' Rpm';
+  $('shModel').textContent = model; $('shRpm').textContent = i.speedCustom;   // để trống = không in tốc độ
   const basisTxt = i.basis === 'static' ? 'tĩnh' : 'toàn phần';
   $('shSub').innerHTML = `Duty : ${Math.round(i.Qh)} M3/HR @ ${num(i.P, i.P < 100 ? 1 : 0)} PA @ Fan: ${mot.chosen} kW`;
 
@@ -825,12 +898,67 @@ $('logoBtn').addEventListener('click', () => $('logoFile').click());$('logoDel')
     return { logo: val, warn };
   }
 
+  /* ---- cậu bé đỡ thư mục: càng nhiều file càng khom xuống ---- */
+  const BOY_MAX = 10;                                    // số file để cậu bé khom hết cỡ
+  const boyHost = $('fdBoy'), boySay = $('fdSay');
+  let boyT = -1, boyGoal = 0, boyRaf = 0;
+  const lerp = (a, b, t) => a + (b - a) * t;
+  function boySvg(e){
+    const hipY = 112 + 38 * e, shY = 84 + 38 * e, hy = 50 + 38 * e, gy = 160, f = n => n.toFixed(1);
+    const fx = 16 + 24 * e, kx = 14 + 34 * e, ky = (hipY + gy) / 2 + 2;
+    const ex = 6 + 20 * e, ey = (shY + 12) / 2;
+    const leg = s => `<path d="M${f(100+s*13)} ${f(hipY)} L${f(100+s*kx)} ${f(ky)} L${f(100+s*fx)} ${gy-5}" fill="none" stroke="url(#bPants)" stroke-width="17" stroke-linecap="round" stroke-linejoin="round"/>` +
+      `<ellipse cx="${f(100+s*(fx+(s>0?3:-3)))}" cy="${gy}" rx="13" ry="7" fill="url(#bShoe)"/>`;
+    const arm = s => `<path d="M${f(100+s*21)} ${f(shY+3)} L${f(100+s*(21+ex))} ${f(ey)}" stroke="url(#bShirt)" stroke-width="14" stroke-linecap="round" fill="none"/>` +
+      `<path d="M${f(100+s*(21+ex))} ${f(ey)} L${f(100+s*32)} 13" stroke="url(#bSkin)" stroke-width="11" stroke-linecap="round" fill="none"/>` +
+      `<circle cx="${f(100+s*32)}" cy="12" r="8" fill="url(#bSkin)"/>`;
+    const brow = s => `<path d="M${f(100+s*15)} ${f(hy-11-e*1)} L${f(100+s*5)} ${f(hy-11+e*4)}" stroke="#4a3426" stroke-width="2.6" stroke-linecap="round"/>`;
+    const eyeH = 4.6 - 2.6 * e;
+    const eye = s => `<ellipse cx="${f(100+s*11)}" cy="${f(hy-1)}" rx="3.6" ry="${f(eyeH)}" fill="#2b2118"/><circle cx="${f(100+s*12)}" cy="${f(hy-2.6)}" r="1.2" fill="#fff"/>`;
+    const sweatO = Math.max(0, Math.min(1, (e - .4) * 2.5));
+    return `<svg viewBox="0 0 200 172" width="100%" aria-hidden="true"><defs>
+      <radialGradient id="bSkin" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#ffe6d2"/><stop offset="1" stop-color="#f1b48f"/></radialGradient>
+      <linearGradient id="bShirt" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4fc0e0"/><stop offset="1" stop-color="#1d7a9c"/></linearGradient>
+      <linearGradient id="bPants" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5b6b87"/><stop offset="1" stop-color="#2c3850"/></linearGradient>
+      <radialGradient id="bShoe" cx=".4" cy=".3" r=".8"><stop offset="0" stop-color="#ff9a73"/><stop offset="1" stop-color="#d4502b"/></radialGradient>
+      <radialGradient id="bHair" cx=".35" cy=".25" r=".9"><stop offset="0" stop-color="#7a5a45"/><stop offset="1" stop-color="#3b281c"/></radialGradient>
+      </defs>
+      <ellipse cx="100" cy="166" rx="${f(40+16*e)}" ry="6" fill="#000" opacity=".16"/>
+      <g class="${e > .75 ? 'tremble' : ''}">
+      ${leg(-1)}${leg(1)}
+      <rect x="78" y="${f(shY-7)}" width="44" height="${f(hipY-shY+20)}" rx="17" fill="url(#bShirt)"/>
+      <rect x="84" y="${f(shY-3)}" width="9" height="${f(hipY-shY+8)}" rx="4.5" fill="#fff" opacity=".22"/>
+      ${arm(-1)}${arm(1)}
+      <circle cx="100" cy="${f(hy)}" r="29" fill="url(#bSkin)"/>
+      <path d="M71 ${f(hy-4)} C 70 ${f(hy-34)}, 130 ${f(hy-34)}, 129 ${f(hy-4)} C 122 ${f(hy-20)}, 108 ${f(hy-23)}, 100 ${f(hy-22)} C 90 ${f(hy-23)}, 77 ${f(hy-20)}, 71 ${f(hy-4)}Z" fill="url(#bHair)"/>
+      <path d="M96 ${f(hy-30)} Q 100 ${f(hy-42)} 107 ${f(hy-33)}" fill="none" stroke="#3b281c" stroke-width="4" stroke-linecap="round"/>
+      <ellipse cx="86" cy="${f(hy-14)}" rx="7" ry="3.4" fill="#fff" opacity=".28" transform="rotate(-20 86 ${f(hy-14)})"/>
+      ${brow(-1)}${brow(1)}${eye(-1)}${eye(1)}
+      <circle cx="82" cy="${f(hy+9)}" r="5" fill="#ff8f8f" opacity="${f(.35+.3*e)}"/><circle cx="118" cy="${f(hy+9)}" r="5" fill="#ff8f8f" opacity="${f(.35+.3*e)}"/>
+      <path d="M${f(94-e)} ${f(hy+13)} Q 100 ${f(hy+13+6-11*e)} ${f(106+e)} ${f(hy+13)}" fill="none" stroke="#7a3b2e" stroke-width="2.6" stroke-linecap="round"/>
+      <path class="sweat" d="M133 ${f(hy-14)} q 6 9 0 13 q -6 -4 0 -13z" fill="#9fdcf5" stroke="#5db7da" stroke-width="1" opacity="${f(sweatO)}"/>
+      </g></svg>`;
+  }
+  function boyDraw(e){ boyT = e; boyHost.innerHTML = boySvg(e); }
+  function boyStep(){
+    boyRaf = 0;
+    const d = boyGoal - boyT;
+    if (Math.abs(d) < .004){ boyDraw(boyGoal); return; }
+    boyDraw(boyT + d * .12); boyRaf = requestAnimationFrame(boyStep);
+  }
+  function setBoy(n){
+    boyGoal = Math.min(1, n / BOY_MAX);
+    boySay.textContent = n === 0 ? 'Sẵn sàng nhận file!' : boyGoal < .3 ? 'Nhẹ tênh~' : boyGoal < .65 ? 'Hơi nặng nha...' : boyGoal < 1 ? 'Nặng quá, cố lên!' : 'Hết sức rồi!! Export đi nhé';
+    if (boyT < 0 || matchMedia('(prefers-reduced-motion:reduce)').matches){ boyDraw(boyGoal); return; }
+    if (!boyRaf) boyRaf = requestAnimationFrame(boyStep);
+  }
+
   /* ---- thư mục ---- */
   const KEY = 'fanFolderV1';
   const FIELDS = ['inQ','inP','inT','inAlt','inPoles','inRpm','inV','inDrive','inMotor','inD','inModel','inSpeedLabel','inProj','inItem','inQuote','inDate'];
   let st = { folder: '', files: [] };
   try { const r = JSON.parse(localStorage.getItem(KEY) || 'null'); if (r && Array.isArray(r.files)) st = r; } catch (e) {}
-  if (!st.folder) st.folder = 'Fan_Selection_' + new Date().toISOString().slice(0, 10);
+  if (!st.folder) st.folder = 'DDT_' + new Date().toISOString().slice(0, 10);
   let saveFail = false;
   const persist = () => { try { localStorage.setItem(KEY, JSON.stringify(st)); saveFail = false; } catch (e) { saveFail = true; } };
   const safe = s => String(s).replace(/[\\/:*?"<>|\x00-\x1f]/g, '_').trim().replace(/[. ]+$/, '') || 'Fan';
@@ -841,6 +969,7 @@ $('logoBtn').addEventListener('click', () => $('logoFile').click());$('logoDel')
   function view(){
     $('fdName').value = st.folder;
     const n = st.files.length;
+    setBoy(n);
     $('fdCount').textContent = n ? `${n} file PDF` : '';
     $('fdList').innerHTML = n ? st.files.map((f, i) =>
       `<li><div class="fd-ico" aria-hidden="true">PDF</div><div class="fd-txt"><b title="${eh(f.name)}.pdf">${eh(f.name)}.pdf</b><small>${eh(f.meta)}</small></div>
@@ -868,11 +997,12 @@ $('logoBtn').addEventListener('click', () => $('logoFile').click());$('logoDel')
     let base = safe(last.model), name = base, k = 2;
     while (st.files.some(f => f.name.toLowerCase() === name.toLowerCase())) name = base + '_' + (k++);
     const i = last.i;
-    const meta = `${Math.round(i.Qh)} m³/h · ${Math.round(i.P)} Pa · ${last.mot.chosen} kW · ${$('shRpm').textContent}`;
+    const meta = `${Math.round(i.Qh)} m³/h · ${Math.round(i.P)} Pa · ${last.mot.chosen} kW · ${$('shRpm').textContent || Math.round(i.rpm) + ' Rpm'}`;
     st.files.push({ id: Date.now() + '_' + Math.random().toString(36).slice(2, 6), name, meta, snap: snapshot(), form: formState() });
     disarm(); persist(); view();
     msg(saveFail ? `Đã thêm ${name}.pdf vào thư mục. Bộ nhớ trình duyệt đầy nên danh sách sẽ mất khi tải lại trang, hãy Export folder sớm.` : `Đã thêm ${name}.pdf vào thư mục.`, saveFail ? 'warn' : 'ok');
     const li = $('fdList').lastElementChild; if (li && li.scrollIntoView) li.scrollIntoView({ block: 'nearest' });
+    requestAnimationFrame(() => flyPlane($('fdList').lastElementChild));
   }
 
   function download(blob, fname){
@@ -886,6 +1016,180 @@ $('logoBtn').addEventListener('click', () => $('logoFile').click());$('logoDel')
   }
   const bytesOf = async blob => new Uint8Array(await blob.arrayBuffer());
 
+  /* ---- máy bay giấy bay từ nút Save tới thư mục, để lại khói ---- */
+  let sky = null;
+  function puff(x, y, size, life, dx, dy){
+    const p = document.createElement('div');
+    p.style.cssText = `position:fixed;left:${x - size / 2}px;top:${y - size / 2}px;width:${size}px;height:${size}px;border-radius:50%;background:radial-gradient(circle at 35% 35%,rgba(190,232,250,.95),rgba(60,160,210,.7) 72%);filter:blur(1.5px);pointer-events:none`;
+    sky.appendChild(p);
+    const a = p.animate([{ transform: 'translate(0,0) scale(.4)', opacity: .85 }, { transform: `translate(${dx}px,${dy}px) scale(1.9)`, opacity: 0 }], { duration: life, easing: 'ease-out' });
+    a.onfinish = () => p.remove();
+  }
+  function mkSky(){ if (!sky){ sky = document.createElement('div'); sky.className = 'noprint'; sky.setAttribute('aria-hidden', 'true'); sky.style.cssText = 'position:fixed;inset:0;z-index:60;pointer-events:none;overflow:hidden'; document.body.appendChild(sky); } }
+  function flyPlane(target){
+    if (matchMedia('(prefers-reduced-motion:reduce)').matches || !target) return;
+    mkSky();
+    const b = $('btnSave').getBoundingClientRect(), t = target.getBoundingClientRect();
+    const x0 = b.left + b.width / 2, y0 = b.top + b.height / 2;
+    const x2 = Math.min(innerWidth - 30, Math.max(30, t.left + t.width * .5)), y2 = Math.min(innerHeight - 30, Math.max(30, t.top + t.height / 2));
+    const x1 = (x0 + x2) / 2, y1 = Math.max(60, Math.min(y0, y2) - 60);
+    const el = document.createElement('div');
+    el.style.cssText = 'position:fixed;left:0;top:0;width:80px;height:49px;margin:-24px 0 0 -40px;filter:drop-shadow(0 3px 3px rgba(0,0,0,.25));will-change:transform';
+    el.innerHTML = '<svg viewBox="0 0 48 30" width="80" height="49"><path d="M20 12 L11 1 L27 11Z" fill="#2f86a6"/><path d="M20 18 L11 29 L27 19Z" fill="#2f86a6"/><path d="M3 15 L1 7 L11 13Z" fill="#2f86a6"/><path d="M2 15 L16 10.5 L31 10.5 L47 15 L31 19.5 L16 19.5Z" fill="#fff" stroke="#0a6b8a" stroke-width="1.6" stroke-linejoin="round"/><circle cx="30" cy="15" r="2.4" fill="#0a6b8a"/><circle cx="23" cy="15" r="2" fill="#0a6b8a" opacity=".7"/></svg>';
+    sky.appendChild(el);
+    const T = 2600, t0 = performance.now(); let lastPuff = 0;
+    const ease = u => u < .5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2;
+    const at = u => { const v = 1 - u; return [v * v * x0 + 2 * v * u * x1 + u * u * x2, v * v * y0 + 2 * v * u * y1 + u * u * y2]; };
+    (function frame(now){
+      const raw = Math.min(1, (now - t0) / T), u = ease(raw), [x, y] = at(u), [xa, ya] = at(Math.min(1, u + .01));
+      const ang = Math.atan2(ya - y, xa - x) * 180 / Math.PI;
+      el.style.transform = `translate(${x}px,${y}px) rotate(${ang}deg) scale(${1 - .25 * u})`;
+      if (now - lastPuff > 70){ lastPuff = now; const r = ang * Math.PI / 180;
+        puff(x - Math.cos(r) * 34 + (Math.random() - .5) * 6, y - Math.sin(r) * 34 + (Math.random() - .5) * 6, 20 + Math.random() * 12, 700 + Math.random() * 300, -Math.cos(r) * 14 + (Math.random() - .5) * 16, -Math.sin(r) * 14 - 10 - Math.random() * 12); }
+      if (raw < 1) requestAnimationFrame(frame); else land();
+    })(t0);
+    function land(){
+      el.remove();
+      for (let k = 0; k < 9; k++){ const a = k / 9 * Math.PI * 2; puff(x2, y2, 16 + Math.random() * 10, 600 + Math.random() * 300, Math.cos(a) * 36, Math.sin(a) * 30 - 6); }
+      const ring = document.createElement('div');
+      ring.style.cssText = `position:fixed;left:${x2 - 18}px;top:${y2 - 18}px;width:36px;height:36px;border-radius:50%;border:3px solid var(--accent);pointer-events:none`;
+      sky.appendChild(ring); ring.animate([{ transform: 'scale(.3)', opacity: .9 }, { transform: 'scale(2.6)', opacity: 0 }], { duration: 650, easing: 'ease-out' }).onfinish = () => ring.remove();
+      target.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.06)' }, { transform: 'scale(.98)' }, { transform: 'scale(1)' }], { duration: 420, easing: 'ease-out' });
+      const ic = document.querySelector('.fd-head svg'); if (ic) ic.animate([{ transform: 'translateY(0)' }, { transform: 'translateY(-5px) rotate(-8deg)' }, { transform: 'translateY(0)' }], { duration: 380 });
+    }
+  }
+
+  /* ---- xoá cả thư mục: cậu bé cầm folder bỏ vào thùng rác ---- */
+  let trashBusy = false;
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  const FOLDER_SVG = '<svg viewBox="0 0 90 72" width="90" height="72"><defs><linearGradient id="tfB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd76a"/><stop offset="1" stop-color="#f2a93b"/></linearGradient></defs><path d="M4 12a6 6 0 0 1 6-6h20l8 9h42a6 6 0 0 1 6 6v43a6 6 0 0 1-6 6H10a6 6 0 0 1-6-6z" fill="#e0922a"/><rect x="4" y="22" width="82" height="46" rx="6" fill="url(#tfB)"/><rect x="10" y="27" width="70" height="6" rx="3" fill="#fff" opacity=".35"/><rect x="30" y="42" width="30" height="5" rx="2.5" fill="#fff" opacity=".7"/></svg>';
+  /* ---- cậu bé nhìn nghiêng: đi bộ, ném (dùng cho cảnh vứt folder vào thùng rác) ---- */
+  const ease = u => u < .5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2;
+  function ik(a, b, l1, l2, sg){
+    const dx = b.x - a.x, dy = b.y - a.y, dist = Math.hypot(dx, dy) || 1, d = Math.min(dist, l1 + l2 - .01), ux = dx / dist, uy = dy / dist;
+    const aa = (l1 * l1 - l2 * l2 + d * d) / (2 * d), hh = Math.sqrt(Math.max(0, l1 * l1 - aa * aa));
+    return { x: a.x + ux * aa + (-uy) * hh * sg, y: a.y + uy * aa + ux * hh * sg };
+  }
+  function sideSvg(p){
+    const f = n => (+n).toFixed(1), gy = 160, mode = p.mode, k = p.k || 0, phi = p.phase || 0, E = ease(k), R = 48;
+    const bob = mode === 'walk' ? -Math.abs(Math.sin(phi)) * 2.6 : 0;
+    const lean = mode === 'walk' ? 3 : mode === 'windup' ? 3 - 17 * E : mode === 'throw' ? -14 + 30 * E : mode === 'follow' ? 16 - 4 * E : 0;
+    const hip = { x: 100 + lean * .25, y: 112 + bob }, sh = { x: 100 + lean, y: 84 + bob + (mode === 'follow' ? 5 * E : 0) };
+    // chân
+    let nearF, farF;
+    if (mode === 'walk'){
+      const ft = a => ({ x: 100 + 20 * Math.sin(a), y: gy - 5 - Math.max(0, Math.cos(a)) * 11 });
+      nearF = ft(phi); farF = ft(phi + Math.PI);
+    } else { farF = { x: 122, y: gy - 5 }; nearF = mode === 'follow' ? { x: 84 + 10 * E, y: gy - 5 - 10 * E } : { x: 84, y: gy - 5 }; }
+    const legPath = (foot, ox) => { const h = { x: hip.x + ox, y: hip.y }, kn = ik(h, foot, 24, 24, -1);
+      return `M${f(h.x)} ${f(h.y)} L${f(kn.x)} ${f(kn.y)} L${f(foot.x)} ${f(foot.y)}`; };
+    const shoe = foot => `<ellipse cx="${f(foot.x + 6)}" cy="${f(foot.y + 5)}" rx="13" ry="7" fill="url(#bShoe)"/>`;
+    // tay
+    const carry = { x: sh.x + 27, y: sh.y + 26 };
+    let nearH, farH, rot = 0, folder = !p.released;
+    if (mode === 'walk'){ nearH = carry; farH = { x: carry.x + 2, y: carry.y + 2 }; }
+    else if (mode === 'windup'){ const a = -140 * Math.PI / 180; nearH = { x: lerp(carry.x, sh.x + R * Math.cos(a), E), y: lerp(carry.y, sh.y + 4 + R * Math.sin(a), E) };
+      farH = { x: lerp(carry.x + 2, sh.x + 30, E), y: lerp(carry.y + 2, sh.y + 4, E) }; rot = -50 * E; }
+    else if (mode === 'throw'){ const a = (-140 + 170 * E) * Math.PI / 180; nearH = { x: sh.x + R * Math.cos(a), y: sh.y + 4 + R * Math.sin(a) }; farH = { x: sh.x + 30 - 12 * E, y: sh.y + 4 + 14 * E }; rot = -50 + 130 * E; }
+    else { const a = (30 + 30 * E) * Math.PI / 180; nearH = { x: sh.x + R * Math.cos(a), y: sh.y + 4 + R * Math.sin(a) }; farH = { x: sh.x - 6, y: sh.y + 30 }; rot = 80; }
+    const S = { x: sh.x, y: sh.y + 4 };
+    const arm = (h, sg, col) => { const el = ik(S, h, 25, 25, sg);
+      return `<path d="M${f(S.x)} ${f(S.y)} L${f(el.x)} ${f(el.y)}" stroke="${col}" stroke-width="13" stroke-linecap="round" fill="none"/>` +
+        `<path d="M${f(el.x)} ${f(el.y)} L${f(h.x)} ${f(h.y)}" stroke="#f3bd98" stroke-width="10.5" stroke-linecap="round" fill="none"/><circle cx="${f(h.x)}" cy="${f(h.y)}" r="7" fill="url(#bSkin)"/>`; };
+    const foldG = `<g transform="translate(${f(nearH.x + (mode === 'walk' ? 4 : 0))} ${f(nearH.y - (mode === 'walk' ? 4 : 0))}) rotate(${f(rot)}) scale(.5)"><g transform="translate(-45 -36)">${FOLDER_SVG.replace(/<svg[^>]*>|<\/svg>/g, '').replace('tfB', 'tfS')}</g></g>`;
+    // đầu
+    const hc = { x: sh.x + 4, y: sh.y - 34 };
+    const mouth = mode === 'throw' ? `<ellipse cx="${f(hc.x + 18)}" cy="${f(hc.y + 15)}" rx="5" ry="${f(3 + 3 * Math.sin(Math.PI * k))}" fill="#7a2e22"/>` :
+      mode === 'windup' ? `<path d="M${f(hc.x + 11)} ${f(hc.y + 15)} h11" stroke="#7a3b2e" stroke-width="2.8" stroke-linecap="round"/>` :
+      `<path d="M${f(hc.x + 11)} ${f(hc.y + 13)} Q ${f(hc.x + 18)} ${f(hc.y + 21)} ${f(hc.x + 25)} ${f(hc.y + 12)}" fill="none" stroke="#7a3b2e" stroke-width="2.6" stroke-linecap="round"/>`;
+    const eye = mode === 'follow' ? `<path d="M${f(hc.x + 8)} ${f(hc.y)} q 5 -6 10 0" fill="none" stroke="#2b2118" stroke-width="2.8" stroke-linecap="round"/>` :
+      `<ellipse cx="${f(hc.x + 13)}" cy="${f(hc.y - 1)}" rx="3.4" ry="${mode === 'windup' ? 3 : 4.6}" fill="#2b2118"/><circle cx="${f(hc.x + 14)}" cy="${f(hc.y - 2.8)}" r="1.2" fill="#fff"/>`;
+    const browA = mode === 'windup' || mode === 'throw' ? 14 : -4;
+    const svg = `<svg viewBox="0 0 200 172" width="100%" aria-hidden="true"><defs>
+      <radialGradient id="bSkin" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#ffe6d2"/><stop offset="1" stop-color="#f1b48f"/></radialGradient>
+      <radialGradient id="bShoe" cx=".4" cy=".3" r=".8"><stop offset="0" stop-color="#ff9a73"/><stop offset="1" stop-color="#d4502b"/></radialGradient>
+      <radialGradient id="bHair" cx=".35" cy=".25" r=".9"><stop offset="0" stop-color="#7a5a45"/><stop offset="1" stop-color="#3b281c"/></radialGradient>
+      <linearGradient id="tfS" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd76a"/><stop offset="1" stop-color="#f2a93b"/></linearGradient></defs>
+      <ellipse cx="${f(104 + lean * .5)}" cy="166" rx="48" ry="6" fill="#000" opacity=".16"/>
+      ${arm(farH, 1, '#1f6f8e')}
+      <path d="${legPath(farF, 3)}" fill="none" stroke="#2c3850" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>${shoe(farF)}
+      <path d="M${f(hip.x)} ${f(hip.y)} L${f(sh.x)} ${f(sh.y)}" stroke="#2f9fc4" stroke-width="36" stroke-linecap="round"/>
+      <path d="M${f(hip.x - 4)} ${f(hip.y - 4)} L${f(sh.x - 4)} ${f(sh.y + 2)}" stroke="#fff" stroke-opacity=".2" stroke-width="7" stroke-linecap="round"/>
+      <path d="${legPath(nearF, -3)}" fill="none" stroke="#3d4b66" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>${shoe(nearF)}
+      <circle cx="${f(hc.x)}" cy="${f(hc.y)}" r="29" fill="url(#bSkin)"/>
+      <circle cx="${f(hc.x - 5)}" cy="${f(hc.y + 5)}" r="5.5" fill="#f1b48f"/>
+      <path d="M${f(hc.x - 29)} ${f(hc.y + 3)} C ${f(hc.x - 31)} ${f(hc.y - 36)}, ${f(hc.x + 22)} ${f(hc.y - 42)}, ${f(hc.x + 29)} ${f(hc.y - 9)} C ${f(hc.x + 18)} ${f(hc.y - 22)}, ${f(hc.x + 4)} ${f(hc.y - 21)}, ${f(hc.x - 2)} ${f(hc.y - 11)} C ${f(hc.x - 10)} ${f(hc.y - 4)}, ${f(hc.x - 22)} ${f(hc.y - 1)}, ${f(hc.x - 29)} ${f(hc.y + 3)}Z" fill="url(#bHair)"/>
+      <path d="M${f(hc.x - 2)} ${f(hc.y - 30)} Q ${f(hc.x + 2)} ${f(hc.y - 43)} ${f(hc.x + 10)} ${f(hc.y - 33)}" fill="none" stroke="#3b281c" stroke-width="4" stroke-linecap="round"/>
+      <path d="M${f(hc.x + 6)} ${f(hc.y - 10)} L${f(hc.x + 20)} ${f(hc.y - 10 + browA / 3)}" stroke="#4a3426" stroke-width="2.8" stroke-linecap="round"/>
+      ${eye}<circle cx="${f(hc.x + 28)}" cy="${f(hc.y + 5)}" r="4" fill="#f1b48f"/>
+      <circle cx="${f(hc.x + 14)}" cy="${f(hc.y + 10)}" r="5" fill="#ff8f8f" opacity=".45"/>${mouth}
+      ${arm(nearH, 1, '#2f9fc4')}${folder ? foldG : ''}</svg>`;
+    return { svg, hand: nearH };
+  }
+  function runAnim(ms, fn){ return new Promise(res => { const t0 = performance.now(); (function fr(n){ const u = Math.min(1, (n - t0) / ms); fn(u); if (u < 1) requestAnimationFrame(fr); else res(); })(t0); }); }
+
+  async function trashFolder(){
+    if (trashBusy) return; trashBusy = true;
+    const panel = $('folder'), bin = $('fdBin');
+    if (matchMedia('(prefers-reduced-motion:reduce)').matches){ st.files = []; persist(); view(); msg('Đã xoá toàn bộ thư mục.', ''); trashBusy = false; return; }
+    mkSky(); msg('', '');
+    const pr = panel.getBoundingClientRect(), hr = boyHost.getBoundingClientRect(), px = pr.left + pr.width / 2, py = pr.top + pr.height / 2;
+    const hx = hr.left + hr.width / 2, hy = hr.top + 14;
+    const fl = document.createElement('div');
+    fl.style.cssText = 'position:fixed;left:0;top:0;width:90px;height:72px;margin:-36px 0 0 -45px;z-index:70;pointer-events:none;filter:drop-shadow(0 4px 4px rgba(0,0,0,.25));opacity:0';
+    fl.innerHTML = FOLDER_SVG; sky.appendChild(fl);
+    boyGoal = 0; if (!boyRaf) boyRaf = requestAnimationFrame(boyStep); boySay.textContent = 'Vứt hết đi nè!';
+    // 1) khung thu nhỏ thành folder bay vào tay cậu bé
+    const shrink = panel.animate([{ transform: 'scale(1)', opacity: 1 }, { transform: 'scale(.15)', opacity: 0 }], { duration: 450, easing: 'ease-in', fill: 'forwards' });
+    await fl.animate([{ opacity: 0, transform: `translate(${px}px,${py}px) scale(1.5)` }, { opacity: 1, transform: `translate(${px}px,${py}px) scale(1.5)`, offset: .3 },
+      { opacity: 1, transform: `translate(${hx}px,${hy}px) scale(.95)` }], { duration: 900, easing: 'ease-in-out', fill: 'forwards' }).finished;
+    cancelAnimationFrame(boyRaf); boyRaf = 0; boyT = 0; fl.remove();
+    // 2) quay người sang phải
+    const draw = p => { const r = sideSvg(p); boyHost.innerHTML = r.svg; return r; };
+    const WALK = 46;
+    await boyHost.animate([{ transform: 'scaleX(1)' }, { transform: 'scaleX(.04)' }], { duration: 140, fill: 'forwards' }).finished; draw({ mode: 'walk', phase: 0 });
+    await boyHost.animate([{ transform: 'scaleX(.04)' }, { transform: 'scaleX(1)' }], { duration: 140, fill: 'forwards' }).finished;
+    boyHost.getAnimations().forEach(a => a.cancel());
+    // 3) bước đi bình thường tới gần thùng, tay ôm folder trước ngực
+    const setX = (x, flip) => { boyHost.style.transform = `translateX(${x}px)${flip ? ' scaleX(-1)' : ''}`; };
+    await runAnim(1800, u => { setX(WALK * u); draw({ mode: 'walk', phase: u * 3.2 * Math.PI * 2 }); });
+    // 4) dừng lại, lấy đà, ném
+    boySay.textContent = 'Nhắm... phóng!';
+    await runAnim(550, u => { draw({ mode: 'windup', k: u }); });
+    bin.classList.add('open');
+    let released = false, flight = null;
+    await runAnim(300, u => {
+      const r = draw({ mode: 'throw', k: u, released });
+      if (!released && u >= .62){
+        released = true;
+        const rc = boyHost.getBoundingClientRect(), sc = rc.width / 200, sx = rc.left + r.hand.x * sc, sy = rc.top + r.hand.y * sc;
+        const br = bin.getBoundingClientRect(), bx = br.left + br.width / 2, by = br.top + 4;
+        fl.style.opacity = 1; sky.appendChild(fl);
+        const keys = [], N = 22, peak = 70 + Math.max(0, sy - by) * .2;
+        for (let k = 0; k <= N; k++){ const t = k / N; keys.push({ transform: `translate(${sx + (bx - sx) * t}px,${sy + (by - sy) * t - 4 * peak * t * (1 - t)}px) rotate(${t * 520}deg) scale(${.7 - .2 * t})`, opacity: 1 }); }
+        keys.push({ transform: `translate(${bx}px,${by + 30}px) rotate(560deg) scale(.4)`, opacity: 0 });
+        flight = fl.animate(keys, { duration: 1050, easing: 'linear', fill: 'forwards' }).finished;
+      }
+    });
+    await runAnim(550, u => { draw({ mode: 'follow', k: u, released: true }); });
+    await flight; fl.remove();
+    const br = bin.getBoundingClientRect(), bx = br.left + br.width / 2, by = br.top + 4;
+    boySay.textContent = 'Trúng phóc!';
+    await sleep(100); bin.classList.remove('open'); await sleep(220);
+    bin.animate([{ transform: 'rotate(0)' }, { transform: 'rotate(-7deg)' }, { transform: 'rotate(6deg)' }, { transform: 'rotate(-3deg)' }, { transform: 'rotate(0)' }], { duration: 420 });
+    for (let k = 0; k < 7; k++){ const a = Math.PI * (1.1 + k / 7 * .8); puff(bx, by + 6, 12 + Math.random() * 8, 650 + Math.random() * 250, Math.cos(a) * 30, Math.sin(a) * 34); }
+    // 5) dọn dữ liệu rồi đi bộ về chỗ cũ
+    st.files = []; persist(); view(); boySay.textContent = 'Trúng phóc!'; cancelAnimationFrame(boyRaf); boyRaf = 0; boyT = 0;
+    shrink.cancel();
+    panel.animate([{ transform: 'scale(.92)', opacity: 0 }, { transform: 'scale(1)', opacity: 1 }], { duration: 380, easing: 'ease-out' });
+    msg('Đã xoá toàn bộ thư mục.', '');
+    await boyHost.animate([{ transform: `translateX(${WALK}px) scaleX(1)` }, { transform: `translateX(${WALK}px) scaleX(-.04)` }], { duration: 140, fill: 'forwards' }).finished;
+    boyHost.getAnimations().forEach(a => a.cancel());
+    await runAnim(1500, u => { setX(WALK * (1 - u), true); draw({ mode: 'walk', phase: u * 3 * Math.PI * 2, released: true }); });
+    boyHost.style.transform = ''; boyDraw(0);
+    boySay.textContent = 'Xong! Nhẹ người~';
+    trashBusy = false;
+  }
   $('btnSave').addEventListener('click', savePdf);
   $('fdName').addEventListener('input', () => { st.folder = $('fdName').value; persist(); });
   $('fdLogo').addEventListener('click', () => $('logoFile').click());
@@ -914,20 +1218,16 @@ $('logoBtn').addEventListener('click', () => $('logoFile').click());$('logoDel')
   }));
   $('fdClear').addEventListener('click', () => {
     if (!armed){ armed = true; armTimer = setTimeout(() => { armed = false; view(); }, 4000); view(); return; }
-    disarm(); st.files = []; persist(); view(); msg('Đã xoá toàn bộ thư mục.', '');
+    disarm(); view(); trashFolder();
   });
   $('logoFile').addEventListener('change', () => { logoCache = { src: null, val: null }; setTimeout(() => { $('fdLogo').hidden = true; }, 0); });
   $('logoDel').addEventListener('click', () => { logoCache = { src: null, val: null }; });
 
-  window.__fanPdf = { buildPdf, zip, getLogo, state: () => st };
-  console.log('[FanSelection runtime check]', {
-    require: typeof require,
-    process: typeof process,
-    nw: typeof nw
-  });   // phục vụ kiểm thử
+  window.__fanPdf = { buildPdf, zip, getLogo, state: () => st };   // phục vụ kiểm thử
   view();
 })();
 
+try { if (matchMedia('(prefers-reduced-motion:reduce)').matches) $('bgSvg').pauseAnimations(); } catch (e) {}
 render();
 </script>
 </body>
