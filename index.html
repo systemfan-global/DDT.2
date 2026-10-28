@@ -1098,7 +1098,10 @@ $('logoBtn').addEventListener('click', () => $('logoFile').click());$('logoDel')
   const FIELDS = ['inEff','inEff2','inTag','inQ2','inP2','inMotor2','inQ','inP','inPoles','inRpm','inV','inMotor','inModel','inSpeedLabel','inProj','inItem','inQuote','inDate'];
   let st = { folder: '', files: [] };
   try { const r = JSON.parse(localStorage.getItem(KEY) || 'null'); if (r && Array.isArray(r.files)) st = r; } catch (e) {}
-  if (!st.folder) st.folder = 'DDT_' + new Date().toISOString().slice(0, 10);
+  // Tên thư mục mặc định = DDT_ + ngày hôm nay theo giờ máy (không dùng toISOString vì nó tính theo UTC nên có thể lệch 1 ngày).
+  // Tên mặc định đã lưu từ ngày cũ sẽ tự cập nhật sang hôm nay; tên do người dùng tự đặt thì giữ nguyên.
+  const _t = new Date(), today = `${_t.getFullYear()}-${String(_t.getMonth() + 1).padStart(2, '0')}-${String(_t.getDate()).padStart(2, '0')}`;
+  if (!st.folder || /^DDT_\d{4}-\d{2}-\d{2}$/.test(st.folder)) st.folder = 'DDT_' + today;
   let saveFail = false;
   const persist = () => { try { localStorage.setItem(KEY, JSON.stringify(st)); saveFail = false; } catch (e) { saveFail = true; } };
   const safe = s => String(s).replace(/[\\/:*?"<>|\x00-\x1f]/g, '_').trim().replace(/[. ]+$/, '') || 'Fan';
