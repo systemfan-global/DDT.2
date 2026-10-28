@@ -519,7 +519,7 @@ function niceFine(maxVal, target){
 }
 
 function chart(c){
-  const W = 640, L = 0, R = 24, T = 8, B = c.xTitle ? 46 : 24, H = c.h, iw = W - L - R, ih = H - T - B;
+  const W = 640, L = 0, R = 0, T = 8, B = c.xTitle ? 46 : 24, H = c.h, iw = W - L - R, ih = H - T - B;
   const sx = x => L + x / c.xmax * iw, sy = y => T + ih - y / c.ymax * ih;
   const id = 'cl' + c.id, K = 'var(--s-ink)';
   let o = `<svg class="chart" viewBox="-36 0 ${W+48} ${H}" style="width:107.5%;margin-left:-5.625%" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${esc(c.aria)}"><defs><clipPath id="${id}"><rect x="${L}" y="${T}" width="${iw}" height="${ih}"/></clipPath></defs>`;
