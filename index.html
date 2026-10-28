@@ -73,7 +73,7 @@ legend{font:600 11px/1 var(--font-ui);letter-spacing:.09em;text-transform:upperc
 .seg input:checked+span{background:var(--accent);color:var(--accent-fg);font-weight:600}
 .seg input:focus-visible+span{outline:2px solid var(--accent);outline-offset:-2px}
 .hint{font-size:12px;color:var(--muted);margin:2px 0 0}
-details{border-top:1px solid var(--line);padding-top:10px}
+details{border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:14px}
 summary{cursor:pointer;font-size:13px;font-weight:500}
 details .fld{margin-top:8px}
 .inp input[type=text]{font-family:var(--font-ui)}
@@ -255,45 +255,6 @@ details .fld{margin-top:8px}
 <main class="layout">
 
   <form id="f" class="panel side" autocomplete="off" onsubmit="return false">
-    <fieldset>
-      <legend>Điểm làm việc 1</legend>
-      <label class="fld"><span>Lưu lượng 1</span><div class="inp"><input id="inQ" type="number" inputmode="decimal" min="1" step="any" value="15000"><em>m³/h</em></div></label>
-      <label class="fld"><span>Áp suất 1</span><div class="inp"><input id="inP" type="number" inputmode="decimal" min="1" step="any" value="300"><em>Pa</em></div></label>
-      <label class="fld"><span>Công suất động cơ 1</span><div class="inp"><input id="inMotor" type="number" inputmode="decimal" min="0" step="any" placeholder="Tự chọn"><em>kW</em></div></label>
-      <label class="fld"><span>Hiệu suất điểm 1</span><div class="inp"><input id="inEff" type="number" inputmode="decimal" min="10" max="95" step="any" placeholder="70–80, trống = tự tính"><em>%</em></div></label>
-      <div class="seg" role="radiogroup" aria-label="Loại áp suất nhập vào">
-        <label><input type="radio" name="basis" value="static" checked><span>Áp suất tĩnh</span></label>
-        <label><input type="radio" name="basis" value="total"><span>Áp suất toàn phần</span></label>
-      </div>
-      <label class="fld"><span>Nhiệt độ khí</span><div class="inp"><input id="inT" type="number" inputmode="decimal" step="any" value="20"><em>°C</em></div></label>
-      <label class="fld"><span>Độ cao so mực biển</span><div class="inp"><input id="inAlt" type="number" inputmode="decimal" min="0" step="any" value="0"><em>m</em></div></label>
-      <p class="hint">Để trống công suất động cơ để chương trình chọn theo dãy chuẩn IEC.</p>
-    </fieldset>
-
-    <fieldset>
-      <legend>Điểm làm việc 2 (tuỳ chọn)</legend>
-      <label class="fld"><span>Lưu lượng 2</span><div class="inp"><input id="inQ2" type="number" inputmode="decimal" min="1" step="any" placeholder="Để trống = 1 điểm"><em>m³/h</em></div></label>
-      <label class="fld"><span>Áp suất 2</span><div class="inp"><input id="inP2" type="number" inputmode="decimal" min="1" step="any"><em>Pa</em></div></label>
-      <label class="fld"><span>Công suất động cơ 2</span><div class="inp"><input id="inMotor2" type="number" inputmode="decimal" min="0" step="any" placeholder="Tự chọn"><em>kW</em></div></label>
-      <label class="fld"><span>Hiệu suất điểm 2</span><div class="inp"><input id="inEff2" type="number" inputmode="decimal" min="10" max="95" step="any" placeholder="70–80, trống = tự tính"><em>%</em></div></label>
-      <p class="hint" id="duty2Info">Cùng một quạt, điểm 2 dùng tốc độ khác (tự tính theo định luật quạt) nên vẽ thêm 1 đường đặc tính.</p>
-    </fieldset>
-
-    <fieldset>
-      <legend>Động cơ</legend>
-      <label class="fld"><span>Số cực (50 Hz)</span><div class="inp"><select id="inPoles">
-        <option value="2">2P</option><option value="4" selected>4P</option><option value="6">6P</option><option value="8">8P</option></select></div></label>
-      <label class="fld"><span>Tốc độ quạt (điểm 1)</span><div class="inp"><input id="inRpm" type="number" inputmode="decimal" min="100" step="any" value="1460"><em>rpm</em></div></label>
-      <label class="fld"><span>Điện áp 3 pha</span><div class="inp"><select id="inV"><option value="380" selected>380 V</option><option value="220">220 V</option></select></div></label>
-      <label class="fld"><span>Truyền động</span><div class="inp"><select id="inDrive"><option value="1" selected>Trực tiếp</option><option value="0.95">Dây đai (η 0.95)</option></select></div></label>
-    </fieldset>
-
-    <fieldset>
-      <legend>Cánh quạt</legend>
-      <label class="fld"><span>Đường kính cánh</span><div class="inp"><input id="inD" type="number" inputmode="decimal" min="100" step="any" placeholder="Tự tính"><em>mm</em></div></label>
-      <p class="hint">Để trống để chương trình tự chọn đường kính, bề rộng cánh và số cửa hút.</p>
-    </fieldset>
-
     <details open>
       <summary>Thông tin trên phiếu</summary>
       <label class="fld"><span>Tên quạt (ô góc trái)</span><div class="inp"><input id="inTag" type="text" placeholder="VD: K-SEF-2F-01~02" value=""></div></label>
@@ -305,6 +266,38 @@ details .fld{margin-top:8px}
       <label class="fld"><span>Báo giá</span><div class="inp"><input id="inQuote" type="text" value="Temp"></div></label>
       <label class="fld"><span>Ngày</span><div class="inp"><input id="inDate" type="text"></div></label>
     </details>
+
+    <fieldset>
+      <legend>Điểm làm việc 1</legend>
+      <label class="fld"><span>Lưu lượng 1</span><div class="inp"><input id="inQ" type="number" inputmode="decimal" min="1" step="any" value="15000"><em>m³/h</em></div></label>
+      <label class="fld"><span>Áp suất 1</span><div class="inp"><input id="inP" type="number" inputmode="decimal" min="1" step="any" value="300"><em>Pa</em></div></label>
+      <label class="fld"><span>Công suất động cơ 1</span><div class="inp"><input id="inMotor" type="number" inputmode="decimal" min="0" step="any" placeholder="Tự chọn"><em>kW</em></div></label>
+      <label class="fld"><span>Hiệu suất điểm 1</span><div class="inp"><input id="inEff" type="number" inputmode="decimal" min="10" max="95" step="any" placeholder="Để trống = không vẽ Eff"><em>%</em></div></label>
+      <div class="seg" role="radiogroup" aria-label="Loại áp suất nhập vào">
+        <label><input type="radio" name="basis" value="static" checked><span>Áp suất tĩnh</span></label>
+        <label><input type="radio" name="basis" value="total"><span>Áp suất toàn phần</span></label>
+      </div>
+      <p class="hint">Để trống công suất động cơ để chương trình chọn theo dãy chuẩn IEC.</p>
+    </fieldset>
+
+    <fieldset>
+      <legend>Điểm làm việc 2 (tuỳ chọn)</legend>
+      <label class="fld"><span>Lưu lượng 2</span><div class="inp"><input id="inQ2" type="number" inputmode="decimal" min="1" step="any" placeholder="Để trống = 1 điểm"><em>m³/h</em></div></label>
+      <label class="fld"><span>Áp suất 2</span><div class="inp"><input id="inP2" type="number" inputmode="decimal" min="1" step="any"><em>Pa</em></div></label>
+      <label class="fld"><span>Công suất động cơ 2</span><div class="inp"><input id="inMotor2" type="number" inputmode="decimal" min="0" step="any" placeholder="Tự chọn"><em>kW</em></div></label>
+      <label class="fld"><span>Hiệu suất điểm 2</span><div class="inp"><input id="inEff2" type="number" inputmode="decimal" min="10" max="95" step="any" placeholder="Để trống = không vẽ Eff"><em>%</em></div></label>
+      <p class="hint" id="duty2Info">Cùng một quạt, điểm 2 dùng tốc độ khác (tự tính theo định luật quạt) nên vẽ thêm 1 đường đặc tính.</p>
+    </fieldset>
+
+    <fieldset>
+      <legend>Động cơ</legend>
+      <label class="fld"><span>Số cực (50 Hz)</span><div class="inp"><select id="inPoles">
+        <option value="2">2P</option><option value="4" selected>4P</option><option value="6">6P</option><option value="8">8P</option></select></div></label>
+      <label class="fld"><span>Tốc độ quạt (điểm 1)</span><div class="inp"><input id="inRpm" type="number" inputmode="decimal" min="100" step="any" value="1460"><em>rpm</em></div></label>
+      <label class="fld"><span>Điện áp 3 pha</span><div class="inp"><select id="inV"><option value="380" selected>380 V</option><option value="220">220 V</option></select></div></label>
+    </fieldset>
+
+
   </form>
 
   <section class="stage">
@@ -559,9 +552,37 @@ function chart(c){
     for (let e = c.eff.perRow; e <= c.eff.max; e += c.eff.perRow) o += `<text x="${L+iw+6}" y="${(sye(e)+3.5).toFixed(1)}">${e}</text>`;
     o += `<text class="tt" x="${L+iw+6}" y="${(sye(c.eff.max)+15).toFixed(1)}">Eff %</text>`;
     if (c.eff.label){
-      const lx = sx(c.eff.label.x), ly2 = sye(c.eff.label.y) + 17, lw = c.eff.title.length * 6 + 8;
-      o += `<rect x="${(lx-lw/2).toFixed(1)}" y="${(ly2-11).toFixed(1)}" width="${lw.toFixed(1)}" height="14" fill="#fff"/>`;
-      o += `<text class="tt" x="${lx.toFixed(1)}" y="${ly2.toFixed(1)}" text-anchor="middle">${c.eff.title}</text>`;
+      // Tự tìm chỗ đặt nhãn "Fan Total Eff %" không đè lên bất kỳ đường nào (đường hiệu suất, áp suất, hệ thống, ô tiêu đề)
+      const lw = c.eff.title.length * 6 + 8;
+      const polys = c.series.map(s2 => s2.pts.map(p => [sx(p[0]), sy(p[1])])).concat(c.eff.series.map(s2 => s2.pts.map(p => [sx(p[0]), sye(p[1])])));
+      const dots = [];
+      for (const pl of polys) for (let q = 1; q < pl.length; q++){
+        const [x0, y0] = pl[q-1], [x1, y1] = pl[q], n = Math.max(1, Math.ceil(Math.hypot(x1-x0, y1-y0) / 3));
+        for (let u = 0; u <= n; u++) dots.push([x0 + (x1-x0)*u/n, y0 + (y1-y0)*u/n]);
+      }
+      const tly = T + ih * c.labelAt, ttw = Math.max(c.title.length, c.unit.length) * 6 + 12;
+      const box = [[L+3, tly-12, L+3+ttw, tly+17]];
+      for (const m of (c.markers || [])) box.push([sx(m.x)-9, sy(m.y)-9, sx(m.x)+18, sy(m.y)+9]);
+      for (const s2 of c.series) if (s2.end){ const q = s2.pts[s2.pts.length - 1]; box.push([sx(q[0]) + 3, sy(q[1]) - 9, sx(q[0]) + 16, sy(q[1]) + 7]); }
+      for (const s2 of c.eff.series) if (s2.end){ const q = s2.pts[s2.pts.length - 1]; box.push([sx(q[0]) + 3, sye(q[1]) - 9, sx(q[0]) + 16, sye(q[1]) + 7]); }
+      const es0 = c.eff.series[0].pts;
+      let best = null;
+      for (let fr = 0.5; fr <= 0.97; fr += 0.01){
+        const pt = es0[Math.min(es0.length - 1, Math.floor(es0.length * fr))];
+        for (const dy of [-8, 17, -22, 31]){
+          const cx = Math.min(L + iw - lw/2 - 2, Math.max(L + lw/2 + 2, sx(pt[0]))), by = sye(pt[1]) + dy;
+          const x0 = cx - lw/2, x1 = cx + lw/2, y0 = by - 11, y1 = by + 3;
+          if (y0 < T + 2 || y1 > T + ih - 2) continue;
+          let sc = dots.reduce((n, d) => n + (d[0] >= x0 && d[0] <= x1 && d[1] >= y0 && d[1] <= y1 ? 1 : 0), 0);
+          for (const bb of box) if (x1 > bb[0] && x0 < bb[2] && y1 > bb[1] && y0 < bb[3]) sc += 50;
+          sc += Math.abs(fr - 0.9) * 12 + Math.abs(dy) * 0.01;     // ưu tiên gần CUỐI đường hiệu suất, sát đường
+          if (!best || sc < best.sc) best = { sc, cx, by };
+        }
+      }
+      if (best){
+        if (best.sc < 2) o += `<rect x="${(best.cx-lw/2).toFixed(1)}" y="${(best.by-11).toFixed(1)}" width="${lw.toFixed(1)}" height="14" fill="#fff"/>`;   // chỉ che lưới, không che đường nào
+        o += `<text class="tt" x="${best.cx.toFixed(1)}" y="${best.by.toFixed(1)}" text-anchor="middle">${c.eff.title}</text>`;
+      }
     }
   }
   if (c.hline && c.hline.y <= c.ymax){
@@ -591,8 +612,8 @@ function readInputs(){
   const opt = id => v(id) === '' ? null : +v(id);
   return {
     Qh: +v('inQ'), P: +v('inP'), basis: document.querySelector('input[name=basis]:checked').value,
-    T: +v('inT'), alt: +v('inAlt') || 0, rpm: +v('inRpm'), V: +v('inV'), etaDrive: +v('inDrive'),
-    motor: opt('inMotor'), Dman: opt('inD'),
+    T: 20, alt: 0, rpm: +v('inRpm'), V: +v('inV'), etaDrive: 1,     // đã bỏ khỏi form: khí 20 °C, mực biển, truyền động trực tiếp
+    motor: opt('inMotor'), Dman: null,                              // đường kính cánh luôn tự tính
     Qh2: opt('inQ2'), P2: opt('inP2'), motor2: opt('inMotor2'), tag: v('inTag'), eff1: opt('inEff'), eff2: opt('inEff2'),
     modelCustom: v('inModel'),
     speedCustom: v('inSpeedLabel')
@@ -656,40 +677,22 @@ function render(){
   const ayP = niceAxis(Math.max(...cs.map(c => c.mot.manual ? c.mot.chosen : c.peakW / eDrive / 1000)) * 1.08, 12, true);
   // Đường hiệu suất: xuất phát 5% tại lưu lượng 0, đi qua đúng hiệu suất nhập (hoặc tự tính) tại điểm làm việc
   const effIn = [i.eff1, i.eff2];
-  const effCurve = (c, k, arr) => {
-    const etaOp = c.op.eta_t, e0 = effIn[k];
-    const E = (e0 >= 10 && e0 <= 95) ? e0 : Math.max(10, etaOp * 100);
-    // làm phẳng: số mũ < 1 giúp nhánh trái bớt dựng đứng; nhánh phải đỉnh chỉ giảm 60% mức giảm thật
-    const GAMMA = 0.8, TAIL = 0.6;
-    // Đỉnh đường hiệu suất bị chặn ở ~80% (hoặc bằng E nếu E đã cao hơn), tránh vọt ra khỏi khung khi điểm làm việc nằm xa đỉnh
-    const etaPk = Math.max(...c.pts.map(p => p.eta_t)), Epk = Math.max(E, Math.min(78.5, E * 1.1));   // chừa ~1.5% cho dao động uốn lượn để đỉnh không vượt 80
-    let raw = arr.map(p => {
-      const r = Math.max(0, p.eta_t);
-      if (etaOp <= .01) return Math.max(5, r * 100);
-      if (r <= etaOp) return 5 + (E - 5) * Math.pow(r / etaOp, GAMMA);
-      return etaPk > etaOp ? E + (Epk - E) * (r - etaOp) / (etaPk - etaOp) : E;
-    });
-    let kPk = 0; raw.forEach((v, j) => { if (v > raw[kPk]) kPk = j; });
-    const pk = raw[kPk];
-    raw = raw.map((v, j) => j > kPk ? pk - (pk - v) * TAIL : v);
-    // giữ đúng giá trị nhập tại điểm làm việc khi nó nằm bên phải đỉnh (phép làm thoải nhánh phải làm lệch đi một chút)
-    const opQ = c.op.Q, qPk = arr[kPk].Q;
-    if (opQ > qPk){
-      let jo = arr.findIndex(p => p.Q >= opQ); if (jo < 0) jo = arr.length - 1;
-      const delta = raw[jo] - E;
-      raw = raw.map((v, j) => j <= kPk ? v : v - delta * Math.min(1, (arr[j].Q - qPk) / Math.max(1e-9, opQ - qPk)));
-    }
-    // đoạn sau điểm làm việc: giới hạn mức tụt (tối đa ~14% hiệu suất tới cuối đường) để không rơi thẳng đứng
-    { const qE = arr[arr.length - 1].Q, opQ2 = c.op.Q;
-      if (qE > opQ2) raw = raw.map((v, j) => arr[j].Q > opQ2 ? Math.max(v, E - 14 * (arr[j].Q - opQ2) / (qE - opQ2)) : v); }
-    // uốn lượn nhẹ như đường mẫu: dao động ~±1.5% hiệu suất, bằng 0 ở hai đầu và tại điểm làm việc (giữ đúng giá trị nhập)
-    const qEnd = arr[arr.length - 1].Q || 1, tOp = c.op.Q / qEnd, AMP = 1.5;
-    return raw.map((v, j) => {
-      const t = arr[j].Q / qEnd, h = Math.tanh((t - tOp) / 0.07);
-      return v + AMP * Math.sin(2 * Math.PI * 2.3 * t + 0.6) * Math.sin(Math.PI * Math.min(1, t)) * h * h;
+  // Đường hiệu suất: đỉnh nằm ĐÚNG tại lưu lượng của điểm làm việc (thẳng hàng với dấu tròn), giá trị đỉnh = hiệu suất nhập (mặc định 75%).
+  // Nhánh trái xuất phát 5% rồi tăng mượt lên đỉnh; nhánh phải giảm thoải (tối đa ~30% giá trị đỉnh, ít hơn nếu điểm làm việc sát cuối đường).
+  const effOn = effIn.map(e => e != null && e >= 10 && e <= 95);   // chỉ vẽ đường Eff của điểm nào có nhập hiệu suất hợp lệ
+  const effE = k => effOn[k] ? effIn[k] : 75;
+  const effCurve = (c, k, Qs) => {
+    const E = effE(k), opQ = c.op.Q, qE = Qs[Qs.length - 1], tEnd = qE / opQ;
+    const D = 0.3 * E * Math.min(1, Math.max(0, (tEnd - 1) / 0.6));
+    return Qs.map(Q => {
+      const t = Q / opQ;
+      let v = t <= 1 ? 5 + (E - 5) * (1 - Math.pow(1 - t, 2.2))
+                     : E - D * Math.pow((t - 1) / Math.max(1e-9, tEnd - 1), 1.6);
+      const tq = Q / qE, h = Math.tanh((t - 1) / 0.2);      // uốn lượn nhẹ ±1.5%, triệt tiêu quanh đỉnh để đỉnh không lệch
+      return v + 1.5 * Math.sin(2 * Math.PI * 2.3 * tq + 0.6) * Math.sin(Math.PI * Math.min(1, tq)) * h * h;
     });
   };
-  const effPeak = Math.max(...cs.flatMap((c, k) => effCurve(c, k, c.pts)));
+  const effPeak = Math.max(0, ...cs.flatMap((c, k) => effOn[k] ? effCurve(c, k, c.pts.map(p => p.Q)) : []));
   const effMax = effPeak <= 80.5 ? 80 : 100;
   const ayPr = niceFine(Math.max(...cs.flatMap(c => c.pts.map(pf))) * 1.05, effMax > 80 ? 14 : 12);   // nhiều hàng ngang hơn để thang Eff 10%/hàng có chỗ trống phía trên
   // Thang hiệu suất bám theo lưới ngang: mỗi hàng ngang = 10% (hoặc 20% nếu lưới quá ít hàng); số hiệu suất lớn nhất (80/100) có thể nằm giữa chừng, phần lưới còn lại bỏ trống
@@ -712,10 +715,20 @@ function render(){
   const prName = i.basis === 'static' ? 'Fan Static Pressure' : 'Fan Total Pressure';
   const lab = k => C2 ? String(k + 1) : '';
   const effSeries = cs.map((c, k) => {
-    const ext = c.draw;                                  // dóng thẳng với điểm cuối của đường áp suất và công suất
-    return effCurve(c, k, ext).map((y, j) => [toH(ext[j]), y]);
+    if (!effOn[k]) return null;                      // không nhập hiệu suất -> không vẽ đường Eff
+    // lấy mẫu theo các lưu lượng của đường áp suất, chèn thêm đúng lưu lượng điểm làm việc để đỉnh thẳng hàng với dấu tròn
+    const Qs = c.draw.map(p => p.Q);
+    const io = Qs.findIndex(q => q >= c.op.Q);
+    if (io >= 0 && Qs[io] !== c.op.Q) Qs.splice(io, 0, c.op.Q);
+    const v = effCurve(c, k, Qs);
+    // đường hiệu suất cách trục đứng một chút (như đường mẫu), tại đó = 5%
+    const j0 = Math.max(0, Qs.findIndex(q => q >= (0.015 + 0.05 * k) * ax.max / 3600));
+    const jo = Math.max(0, Qs.indexOf(c.op.Q)), v0 = v[j0], eOp = v[jo];
+    const w = v.map((y, j) => (j <= jo && eOp - v0 > 1) ? 5 + (y - v0) * (eOp - 5) / (eOp - v0) : y);
+    return Qs.slice(j0).map((q, j) => [q * 3600, w[j + j0]]);
   });
-  const e1 = effSeries[0], eL = e1[Math.min(e1.length - 1, Math.floor(e1.length * 0.8))];
+  const effAct = effSeries.map((pts, k) => pts ? { pts, end: lab(k) } : null).filter(Boolean);
+  const e1 = effAct.length ? effAct[0].pts : null, eL = e1 ? e1[Math.min(e1.length - 1, Math.floor(e1.length * 0.8))] : null;
 
   $('chPower').innerHTML = chart({ id:1, h:336, xmax:ax.max, xstep:ax.step, xdiv, ymax:ayP.max, ystep:ayP.step, labelAt:.22,
     title:'Fan Power', unit:'kW', aria:'Đường công suất theo lưu lượng',
@@ -730,7 +743,7 @@ function render(){
   });
   $('chPress').innerHTML = chart({ id:2, h:440, xmax:ax.max, xstep:ax.step, xdiv, ymax:ayPr.max, ystep:ayPr.step, xTitle, labelAt:.38,
     title:prName, unit:'Pa', aria:'Đường áp suất theo lưu lượng và đường hệ thống',
-    eff: { max: effMax, perRow: effPerRow, title: 'Fan Total Eff %', series: effSeries.map((pts, k) => ({ pts, end: lab(k) })), label: { x: eL[0], y: eL[1] } },
+    eff: effAct.length ? { max: effMax, perRow: effPerRow, title: 'Fan Total Eff %', series: effAct, label: { x: eL[0], y: eL[1] } } : null,
     series: sysSeries.concat(cs.map((c, k) => ({ pts: c.draw.map(p => [toH(p), pf(p)]), end: lab(k) }))),
     markers: cs.map((c, k) => ({ x: c.op.Q * 3600, y: opPrOf(c), label: '' })) });
 
@@ -1082,7 +1095,7 @@ $('logoBtn').addEventListener('click', () => $('logoFile').click());$('logoDel')
 
   /* ---- thư mục ---- */
   const KEY = 'fanFolderV1';
-  const FIELDS = ['inEff','inEff2','inTag','inQ2','inP2','inMotor2','inQ','inP','inT','inAlt','inPoles','inRpm','inV','inDrive','inMotor','inD','inModel','inSpeedLabel','inProj','inItem','inQuote','inDate'];
+  const FIELDS = ['inEff','inEff2','inTag','inQ2','inP2','inMotor2','inQ','inP','inPoles','inRpm','inV','inMotor','inModel','inSpeedLabel','inProj','inItem','inQuote','inDate'];
   let st = { folder: '', files: [] };
   try { const r = JSON.parse(localStorage.getItem(KEY) || 'null'); if (r && Array.isArray(r.files)) st = r; } catch (e) {}
   if (!st.folder) st.folder = 'DDT_' + new Date().toISOString().slice(0, 10);
