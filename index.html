@@ -73,7 +73,7 @@ legend{font:600 11px/1 var(--font-ui);letter-spacing:.09em;text-transform:upperc
 .seg input:checked+span{background:var(--accent);color:var(--accent-fg);font-weight:600}
 .seg input:focus-visible+span{outline:2px solid var(--accent);outline-offset:-2px}
 .hint{font-size:12px;color:var(--muted);margin:2px 0 0}
-details{border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:14px}
+details{border-top:1px solid var(--line);padding-top:10px}
 summary{cursor:pointer;font-size:13px;font-weight:500}
 details .fld{margin-top:8px}
 .inp input[type=text]{font-family:var(--font-ui)}
@@ -171,6 +171,8 @@ details .fld{margin-top:8px}
   border-radius:2px;box-shadow:0 1px 2px rgba(0,0,0,.10),0 10px 30px rgba(0,0,0,.14);min-width:0;
 }
 .sheet+.sheet{margin-top:4px}
+.sheet{position:relative}
+.pgno{position:absolute;right:44px;bottom:10px;font:10px/1 var(--font-ui);color:#8c8c8c;pointer-events:none}   /* số trang: nhỏ, xám nhạt, góc phải dưới */
 .logo-slot{position:relative;height:60px;display:flex;justify-content:flex-end;align-items:center}
 .tagbox{position:absolute;left:0;top:50%;transform:translateY(-50%);border:1px solid var(--s-ink);padding:4px 12px;font:600 15px/1.2 var(--font-head);background:#fff;max-width:60%}
 .tagbox[hidden]{display:none}
@@ -200,6 +202,7 @@ details .fld{margin-top:8px}
   .stage{display:block}
   .sheet{box-shadow:none;border-radius:0;padding:10mm 12mm;max-width:none;margin:0;break-inside:avoid;height:296mm;overflow:hidden}   /* đúng 1 trang A4, không bao giờ tràn sang trang 2 */
   .foot{margin-top:0}
+  .pgno{right:12mm;bottom:6mm;font-size:8pt}
   .logo-slot{height:19mm}
   .logo-slot img{max-width:60mm}
 }
@@ -255,24 +258,12 @@ details .fld{margin-top:8px}
 <main class="layout">
 
   <form id="f" class="panel side" autocomplete="off" onsubmit="return false">
-    <details open>
-      <summary>Thông tin trên phiếu</summary>
-      <label class="fld"><span>Tên quạt (ô góc trái)</span><div class="inp"><input id="inTag" type="text" placeholder="VD: K-SEF-2F-01~02" value=""></div></label>
-      <label class="fld"><span>Model (thanh tiêu đề)</span><div class="inp"><input id="inModel" type="text" placeholder="Tự động" value=""></div></label>
-      <label class="fld"><span>Tốc độ hiển thị</span><div class="inp"><input id="inSpeedLabel" type="text" list="speedList" placeholder="Để trống = không in" value="">
-        <datalist id="speedList"><option value="4P"><option value="6P"><option value="4P/6P"><option value="1460 Rpm"><option value="970 Rpm"><option value="1460/970 Rpm"></datalist></div></label>
-      <label class="fld"><span>Dự án</span><div class="inp"><input id="inProj" type="text" value="Fan Selection"></div></label>
-      <label class="fld"><span>Mã hàng</span><div class="inp"><input id="inItem" type="text" value="Temp 1"></div></label>
-      <label class="fld"><span>Báo giá</span><div class="inp"><input id="inQuote" type="text" value="Temp"></div></label>
-      <label class="fld"><span>Ngày</span><div class="inp"><input id="inDate" type="text"></div></label>
-    </details>
-
     <fieldset>
       <legend>Điểm làm việc 1</legend>
-      <label class="fld"><span>Lưu lượng 1</span><div class="inp"><input id="inQ" type="number" inputmode="decimal" min="1" step="any" value="15000"><em>m³/h</em></div></label>
-      <label class="fld"><span>Áp suất 1</span><div class="inp"><input id="inP" type="number" inputmode="decimal" min="1" step="any" value="300"><em>Pa</em></div></label>
+      <label class="fld"><span>Lưu lượng 1</span><div class="inp"><input id="inQ" type="number" inputmode="decimal" min="1" step="any" placeholder="Nhập lưu lượng"><em>m³/h</em></div></label>
+      <label class="fld"><span>Áp suất 1</span><div class="inp"><input id="inP" type="number" inputmode="decimal" min="1" step="any" placeholder="Nhập áp suất"><em>Pa</em></div></label>
       <label class="fld"><span>Công suất động cơ 1</span><div class="inp"><input id="inMotor" type="number" inputmode="decimal" min="0" step="any" placeholder="Tự chọn"><em>kW</em></div></label>
-      <label class="fld"><span>Hiệu suất điểm 1</span><div class="inp"><input id="inEff" type="number" inputmode="decimal" min="10" max="95" step="any" placeholder="Để trống = không vẽ Eff"><em>%</em></div></label>
+      <label class="fld"><span>Hiệu suất điểm 1</span><div class="inp"><input id="inEff" type="number" inputmode="decimal" min="10" max="95" step="any" placeholder="70–80, trống = không vẽ"><em>%</em></div></label>
       <div class="seg" role="radiogroup" aria-label="Loại áp suất nhập vào">
         <label><input type="radio" name="basis" value="static" checked><span>Áp suất tĩnh</span></label>
         <label><input type="radio" name="basis" value="total"><span>Áp suất toàn phần</span></label>
@@ -285,7 +276,7 @@ details .fld{margin-top:8px}
       <label class="fld"><span>Lưu lượng 2</span><div class="inp"><input id="inQ2" type="number" inputmode="decimal" min="1" step="any" placeholder="Để trống = 1 điểm"><em>m³/h</em></div></label>
       <label class="fld"><span>Áp suất 2</span><div class="inp"><input id="inP2" type="number" inputmode="decimal" min="1" step="any"><em>Pa</em></div></label>
       <label class="fld"><span>Công suất động cơ 2</span><div class="inp"><input id="inMotor2" type="number" inputmode="decimal" min="0" step="any" placeholder="Tự chọn"><em>kW</em></div></label>
-      <label class="fld"><span>Hiệu suất điểm 2</span><div class="inp"><input id="inEff2" type="number" inputmode="decimal" min="10" max="95" step="any" placeholder="Để trống = không vẽ Eff"><em>%</em></div></label>
+      <label class="fld"><span>Hiệu suất điểm 2</span><div class="inp"><input id="inEff2" type="number" inputmode="decimal" min="10" max="95" step="any" placeholder="70–80, trống = không vẽ"><em>%</em></div></label>
       <p class="hint" id="duty2Info">Cùng một quạt, điểm 2 dùng tốc độ khác (tự tính theo định luật quạt) nên vẽ thêm 1 đường đặc tính.</p>
     </fieldset>
 
@@ -298,6 +289,17 @@ details .fld{margin-top:8px}
     </fieldset>
 
 
+    <details open>
+      <summary>Thông tin trên phiếu</summary>
+      <label class="fld"><span>Tên quạt (ô góc trái)</span><div class="inp"><input id="inTag" type="text" placeholder="VD: K-SEF-2F-01~02" value=""></div></label>
+      <label class="fld"><span>Model (thanh tiêu đề)</span><div class="inp"><input id="inModel" type="text" placeholder="Tự động" value=""></div></label>
+      <label class="fld"><span>Tốc độ hiển thị</span><div class="inp"><input id="inSpeedLabel" type="text" list="speedList" placeholder="Để trống = không in" value="">
+        <datalist id="speedList"><option value="4P"><option value="6P"><option value="4P/6P"><option value="1460 Rpm"><option value="970 Rpm"><option value="1460/970 Rpm"></datalist></div></label>
+      <label class="fld"><span>Dự án</span><div class="inp"><input id="inProj" type="text" value="Fan Selection"></div></label>
+      <label class="fld"><span>Mã hàng</span><div class="inp"><input id="inItem" type="text" value="Temp 1"></div></label>
+      <label class="fld"><span>Báo giá</span><div class="inp"><input id="inQuote" type="text" value="Temp"></div></label>
+      <label class="fld"><span>Ngày</span><div class="inp"><input id="inDate" type="text"></div></label>
+    </details>
   </form>
 
   <section class="stage">
@@ -306,6 +308,7 @@ details .fld{margin-top:8px}
     <div class="panel result noprint" id="result"></div>
 
     <article class="sheet" id="sheet1">
+      <div class="pgno" id="shPg">1</div>
       <div class="logo-slot" id="logoSlot">
         <div class="tagbox" id="shTagBox" hidden><span id="shTag"></span></div>
         <button type="button" class="logo-add noprint" id="logoBtn" title="Chọn ảnh logo (PNG/JPG)" hidden>+ Thêm logo</button>
@@ -519,7 +522,7 @@ function niceFine(maxVal, target){
 }
 
 function chart(c){
-  const W = 640, L = 0, R = 0, T = 8, B = c.xTitle ? 46 : 24, H = c.h, iw = W - L - R, ih = H - T - B;
+  const W = 640, L = 0, R = 24, T = 8, B = c.xTitle ? 46 : 24, H = c.h, iw = W - L - R, ih = H - T - B;
   const sx = x => L + x / c.xmax * iw, sy = y => T + ih - y / c.ymax * ih;
   const id = 'cl' + c.id, K = 'var(--s-ink)';
   let o = `<svg class="chart" viewBox="-36 0 ${W+48} ${H}" style="width:107.5%;margin-left:-5.625%" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${esc(c.aria)}"><defs><clipPath id="${id}"><rect x="${L}" y="${T}" width="${iw}" height="${ih}"/></clipPath></defs>`;
@@ -543,18 +546,19 @@ function chart(c){
     if (s.end){ const q = s.pts[s.pts.length - 1]; o += `<text x="${(sx(q[0]) + 6).toFixed(1)}" y="${(sy(q[1]) + 3.5).toFixed(1)}">${s.end}</text>`; }
   }
   if (c.eff){
-    const sye = e => sy(e / c.eff.perRow * c.ystep);
+    // mỗi đường hiệu suất có thể có thang riêng (scale = Pa trên mỗi 1%) để đỉnh chạm đúng dấu tròn của điểm làm việc tương ứng; mặc định theo cột Eff % bên phải
+    const sye = (e, s2) => sy(e * ((s2 && s2.scale) || c.ystep / c.eff.perRow));
     for (const es of c.eff.series){
-      const d = es.pts.map((p, i) => (i ? 'L' : 'M') + sx(p[0]).toFixed(1) + ' ' + sye(p[1]).toFixed(1)).join('');
+      const d = es.pts.map((p, i) => (i ? 'L' : 'M') + sx(p[0]).toFixed(1) + ' ' + sye(p[1], es).toFixed(1)).join('');
       o += `<path d="${d}" fill="none" stroke="${K}" stroke-width="1.1" stroke-linejoin="round" stroke-dasharray="9 3 2 3" clip-path="url(#${id})"/>`;
     }
-    for (const es of c.eff.series) if (es.end){ const q = es.pts[es.pts.length - 1]; o += `<text x="${(sx(q[0]) + 6).toFixed(1)}" y="${(sye(q[1]) + 3.5).toFixed(1)}">${es.end}</text>`; }
+    for (const es of c.eff.series) if (es.end){ const q = es.pts[es.pts.length - 1]; o += `<text x="${(sx(q[0]) + 6).toFixed(1)}" y="${(sye(q[1], es) + 3.5).toFixed(1)}">${es.end}</text>`; }
     for (let e = c.eff.perRow; e <= c.eff.max; e += c.eff.perRow) o += `<text x="${L+iw+6}" y="${(sye(e)+3.5).toFixed(1)}">${e}</text>`;
-    o += `<text class="tt" x="${L+iw+6}" y="${(sye(c.eff.max)+15).toFixed(1)}">Eff %</text>`;
+    o += `<text class="tt" x="${L+iw+6}" y="${(sye(c.eff.max) + ((ih * c.ystep / c.ymax) >= 28 ? 15 : -8)).toFixed(1)}">Eff %</text>`;
     if (c.eff.label){
       // Tự tìm chỗ đặt nhãn "Fan Total Eff %" không đè lên bất kỳ đường nào (đường hiệu suất, áp suất, hệ thống, ô tiêu đề)
       const lw = c.eff.title.length * 6 + 8;
-      const polys = c.series.map(s2 => s2.pts.map(p => [sx(p[0]), sy(p[1])])).concat(c.eff.series.map(s2 => s2.pts.map(p => [sx(p[0]), sye(p[1])])));
+      const polys = c.series.map(s2 => s2.pts.map(p => [sx(p[0]), sy(p[1])])).concat(c.eff.series.map(s2 => s2.pts.map(p => [sx(p[0]), sye(p[1], s2)])));
       const dots = [];
       for (const pl of polys) for (let q = 1; q < pl.length; q++){
         const [x0, y0] = pl[q-1], [x1, y1] = pl[q], n = Math.max(1, Math.ceil(Math.hypot(x1-x0, y1-y0) / 3));
@@ -564,13 +568,13 @@ function chart(c){
       const box = [[L+3, tly-12, L+3+ttw, tly+17]];
       for (const m of (c.markers || [])) box.push([sx(m.x)-9, sy(m.y)-9, sx(m.x)+18, sy(m.y)+9]);
       for (const s2 of c.series) if (s2.end){ const q = s2.pts[s2.pts.length - 1]; box.push([sx(q[0]) + 3, sy(q[1]) - 9, sx(q[0]) + 16, sy(q[1]) + 7]); }
-      for (const s2 of c.eff.series) if (s2.end){ const q = s2.pts[s2.pts.length - 1]; box.push([sx(q[0]) + 3, sye(q[1]) - 9, sx(q[0]) + 16, sye(q[1]) + 7]); }
-      const es0 = c.eff.series[0].pts;
+      for (const s2 of c.eff.series) if (s2.end){ const q = s2.pts[s2.pts.length - 1]; box.push([sx(q[0]) + 3, sye(q[1], s2) - 9, sx(q[0]) + 16, sye(q[1], s2) + 7]); }
+      const es0 = c.eff.series[0].pts, es0s = c.eff.series[0];
       let best = null;
       for (let fr = 0.5; fr <= 0.97; fr += 0.01){
         const pt = es0[Math.min(es0.length - 1, Math.floor(es0.length * fr))];
         for (const dy of [-8, 17, -22, 31]){
-          const cx = Math.min(L + iw - lw/2 - 2, Math.max(L + lw/2 + 2, sx(pt[0]))), by = sye(pt[1]) + dy;
+          const cx = Math.min(L + iw - lw/2 - 2, Math.max(L + lw/2 + 2, sx(pt[0]))), by = sye(pt[1], es0s) + dy;
           const x0 = cx - lw/2, x1 = cx + lw/2, y0 = by - 11, y1 = by + 3;
           if (y0 < T + 2 || y1 > T + ih - 2) continue;
           let sc = dots.reduce((n, d) => n + (d[0] >= x0 && d[0] <= x1 && d[1] >= y0 && d[1] <= y1 ? 1 : 0), 0);
@@ -628,6 +632,15 @@ function render(){
   const i = readInputs(), notes = [];
   if (!(i.Qh > 0) || !(i.P > 0) || !(i.rpm > 0) || !Number.isFinite(i.T) || i.T < -50 || i.T > 250){
     setNotes([{ t:'warn', h:'Nhập lưu lượng, áp suất và tốc độ lớn hơn 0, nhiệt độ trong khoảng −50 đến 250 °C.' }]);
+    // chưa đủ số liệu: vẫn giữ nguyên tờ A4 với khung và lưới trống, chỉ không vẽ đường nào
+    $('chPower').innerHTML = chart({ id:1, h:336, xmax:40000, xstep:5000, xdiv:1000, ymax:10, ystep:1, labelAt:.22,
+      title:'Fan Power', unit:'kW', aria:'Biểu đồ công suất (chưa có số liệu)', series:[], markers:[] });
+    $('chPress').innerHTML = chart({ id:2, h:440, xmax:40000, xstep:5000, xdiv:1000, ymax:1000, ystep:100, xTitle:'Volume Flow M3/HR X 1000', labelAt:.38,
+      title: i.basis === 'static' ? 'Fan Static Pressure' : 'Fan Total Pressure', unit:'Pa', aria:'Biểu đồ áp suất (chưa có số liệu)', series:[], markers:[] });
+    $('result').innerHTML = '';
+    $('shProj').textContent = $('inProj').value; $('shItem').textContent = $('inItem').value; $('shQuote').textContent = $('inQuote').value; $('shDate').textContent = $('inDate').value;
+    $('shTag').textContent = i.tag; $('shTagBox').hidden = !i.tag;
+    for (const id of ['shSub','shModel']) $(id).textContent = '';
     return;
   }
   const rho = airDensity(i.T, i.alt);
@@ -677,10 +690,24 @@ function render(){
   const ayP = niceAxis(Math.max(...cs.map(c => c.mot.manual ? c.mot.chosen : c.peakW / eDrive / 1000)) * 1.08, 12, true);
   // Đường hiệu suất: xuất phát 5% tại lưu lượng 0, đi qua đúng hiệu suất nhập (hoặc tự tính) tại điểm làm việc
   const effIn = [i.eff1, i.eff2];
+  const effOn = cs.map((c, k) => effIn[k] >= 10 && effIn[k] <= 95);       // để trống (hoặc ngoài 10–95%) = không vẽ đường hiệu suất đó
+  const hasEff = effOn.some(Boolean), kA = Math.max(0, effOn.indexOf(true));  // kA: đường dùng để chia lưới
   // Đường hiệu suất: đỉnh nằm ĐÚNG tại lưu lượng của điểm làm việc (thẳng hàng với dấu tròn), giá trị đỉnh = hiệu suất nhập (mặc định 75%).
   // Nhánh trái xuất phát 5% rồi tăng mượt lên đỉnh; nhánh phải giảm thoải (tối đa ~30% giá trị đỉnh, ít hơn nếu điểm làm việc sát cuối đường).
-  const effOn = effIn.map(e => e != null && e >= 10 && e <= 95);   // chỉ vẽ đường Eff của điểm nào có nhập hiệu suất hợp lệ
-  const effE = k => effOn[k] ? effIn[k] : 75;
+  // Chia lưới áp suất sao cho ĐỈNH hiệu suất trùng đúng điểm giao (dấu tròn): chiều cao điểm làm việc = hiệu suất × (bước lưới / perRow)
+  //   => bước lưới = perRow × áp suất điểm làm việc / hiệu suất. Bước được làm tròn "đẹp" (bội của 5) nên hiệu suất thực tại điểm làm việc lệch vài % so với số nhập.
+  const opPrs = cs.map(c => i.basis === 'static' ? c.op.Ps : c.op.Pt);
+  const maxP = Math.max(...cs.flatMap(c => c.pts.map(pf))) * 1.05;
+  const eTarget = hasEff ? effIn[kA] : 75;
+  let perRow = 10;
+  while (perRow < 50 && maxP / (perRow * opPrs[kA] / eTarget) > 16) perRow += 10;     // lưới quá dày (>16 hàng) thì mỗi hàng ứng với 20%, 30%...
+  const stepT = perRow * opPrs[kA] / eTarget, eDec = Math.floor(Math.log10(stepT));
+  const nearest = (vals) => vals.reduce((a, b) => Math.abs(b - stepT) < Math.abs(a - stepT) ? b : a);
+  let gStep = nearest(Array.from({ length: 19 }, (_, j) => (10 + 5 * j) * Math.pow(10, eDec - 1)));
+  if (Math.abs(perRow * opPrs[kA] / gStep - eTarget) > 3) gStep = nearest(Array.from({ length: 91 }, (_, j) => (10 + j) * Math.pow(10, eDec - 1)));
+  // Điểm 1 theo lưới/cột Eff % (≈ số nhập). Điểm 2 dùng đúng số nhập (mặc định 75%) với thang riêng nên đỉnh luôn chạm dấu tròn 2
+  const effEs = opPrs.map((pr, k) => k === kA ? perRow * pr / gStep : (effOn[k] ? effIn[k] : null));
+  const effE = k => effEs[k];
   const effCurve = (c, k, Qs) => {
     const E = effE(k), opQ = c.op.Q, qE = Qs[Qs.length - 1], tEnd = qE / opQ;
     const D = 0.3 * E * Math.min(1, Math.max(0, (tEnd - 1) / 0.6));
@@ -694,9 +721,9 @@ function render(){
   };
   const effPeak = Math.max(0, ...cs.flatMap((c, k) => effOn[k] ? effCurve(c, k, c.pts.map(p => p.Q)) : []));
   const effMax = effPeak <= 80.5 ? 80 : 100;
-  const ayPr = niceFine(Math.max(...cs.flatMap(c => c.pts.map(pf))) * 1.05, effMax > 80 ? 14 : 12);   // nhiều hàng ngang hơn để thang Eff 10%/hàng có chỗ trống phía trên
-  // Thang hiệu suất bám theo lưới ngang: mỗi hàng ngang = 10% (hoặc 20% nếu lưới quá ít hàng); số hiệu suất lớn nhất (80/100) có thể nằm giữa chừng, phần lưới còn lại bỏ trống
-  const effPerRow = Math.round(ayPr.max / ayPr.step) >= effMax / 10 ? 10 : 20;
+  const gRows = Math.max(Math.ceil(maxP / gStep - 1e-9), Math.ceil(effMax / perRow));
+  const ayPr = hasEff ? { step: gStep, max: gRows * gStep } : niceFine(maxP, 12);   // không có hiệu suất: lưới áp suất thường
+  const effPerRow = perRow;
   // Cắt đuôi đường cong: dừng khi áp suất còn ~3% thang đo, không vẽ bò dọc đáy khung (như ảnh mẫu)
   const CUT_Y = 0.03;                      // mức áp suất (so với thang Y) để dừng đường cong
   for (const c of cs){
@@ -715,7 +742,7 @@ function render(){
   const prName = i.basis === 'static' ? 'Fan Static Pressure' : 'Fan Total Pressure';
   const lab = k => C2 ? String(k + 1) : '';
   const effSeries = cs.map((c, k) => {
-    if (!effOn[k]) return null;                      // không nhập hiệu suất -> không vẽ đường Eff
+    if (!effOn[k]) return null;
     // lấy mẫu theo các lưu lượng của đường áp suất, chèn thêm đúng lưu lượng điểm làm việc để đỉnh thẳng hàng với dấu tròn
     const Qs = c.draw.map(p => p.Q);
     const io = Qs.findIndex(q => q >= c.op.Q);
@@ -727,8 +754,9 @@ function render(){
     const w = v.map((y, j) => (j <= jo && eOp - v0 > 1) ? 5 + (y - v0) * (eOp - 5) / (eOp - v0) : y);
     return Qs.slice(j0).map((q, j) => [q * 3600, w[j + j0]]);
   });
-  const effAct = effSeries.map((pts, k) => pts ? { pts, end: lab(k) } : null).filter(Boolean);
-  const e1 = effAct.length ? effAct[0].pts : null, eL = e1 ? e1[Math.min(e1.length - 1, Math.floor(e1.length * 0.8))] : null;
+  // Thang riêng cho từng đường: đường 1 theo cột Eff % (mặc định), đường 2 (nếu có) tự co giãn để đỉnh chạm đúng dấu tròn điểm 2
+  const effScale = cs.map((c, k) => (k === kA || !effOn[k]) ? null : opPrs[k] / effEs[k]);
+  const e1 = effSeries[kA] || [[0, 0]], eL = e1[Math.min(e1.length - 1, Math.floor(e1.length * 0.8))];
 
   $('chPower').innerHTML = chart({ id:1, h:336, xmax:ax.max, xstep:ax.step, xdiv, ymax:ayP.max, ystep:ayP.step, labelAt:.22,
     title:'Fan Power', unit:'kW', aria:'Đường công suất theo lưu lượng',
@@ -743,7 +771,7 @@ function render(){
   });
   $('chPress').innerHTML = chart({ id:2, h:440, xmax:ax.max, xstep:ax.step, xdiv, ymax:ayPr.max, ystep:ayPr.step, xTitle, labelAt:.38,
     title:prName, unit:'Pa', aria:'Đường áp suất theo lưu lượng và đường hệ thống',
-    eff: effAct.length ? { max: effMax, perRow: effPerRow, title: 'Fan Total Eff %', series: effAct, label: { x: eL[0], y: eL[1] } } : null,
+    eff: !hasEff ? null : { max: effMax, perRow: effPerRow, title: 'Fan Total Eff %', series: effSeries.map((pts, k) => pts && ({ pts, end: lab(k), scale: effScale[k] })).filter(Boolean), label: { x: eL[0], y: eL[1] } },
     series: sysSeries.concat(cs.map((c, k) => ({ pts: c.draw.map(p => [toH(p), pf(p)]), end: lab(k) }))),
     markers: cs.map((c, k) => ({ x: c.op.Q * 3600, y: opPrOf(c), label: '' })) });
 
@@ -925,7 +953,7 @@ $('logoBtn').addEventListener('click', () => $('logoFile').click());$('logoDel')
   }
 
   /* ---- một trang A4 từ ảnh chụp (snap) ---- */
-  function pageContent(sn, logo){
+  function pageContent(sn, logo, pageNo){
     const mm = v => v * K, X = v => f2(mm(v)), Y = v => f2((297 - v) * K);
     let o = '0 G 0 g\n';
     if (logo){
@@ -955,6 +983,7 @@ $('logoBtn').addEventListener('click', () => $('logoFile').click());$('logoDel')
     const s = w / +geo[0].getAttribute('viewBox').trim().split(/\s+/)[2];
     const top1 = 59.49, top2 = top1 + +geo[0].getAttribute('viewBox').trim().split(/\s+/)[3] * s;
     o += svgToPdf(geo[0], left, top1, w) + svgToPdf(geo[1], left, top2, w);
+    if (pageNo) o += `0.55 g\n` + text(String(pageNo), mm(198.08), base(291), 8, false, 'end') + `0 g\n`;   // số trang: góc phải dưới, chữ 8pt xám
     return o;
   }
 
@@ -973,7 +1002,7 @@ $('logoBtn').addEventListener('click', () => $('logoFile').click());$('logoDel')
     if (logo) obj(imgN, [`<< /Type /XObject /Subtype /Image /Width ${logo.w} /Height ${logo.h} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${logo.bytes.length} >>\nstream\n`, logo.bytes, '\nendstream']);
     const res = `<< /Font << /F1 3 0 R /F2 4 0 R >> /ExtGState << /GS1 << /ca 0.85 /CA 1 >> >>${logo ? ' /XObject << /Im1 5 0 R >>' : ''} >>`;
     snaps.forEach((sn, i) => {
-      const pn = first + 2 * i, cn = pn + 1, c = enc(pageContent(sn, logo));
+      const pn = first + 2 * i, cn = pn + 1, c = enc(pageContent(sn, logo, i + 1));
       obj(pn, `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${PW} ${PH}] /Resources ${res} /Contents ${cn} 0 R >>`);
       obj(cn, [`<< /Length ${c.length} >>\nstream\n`, c, '\nendstream']);
     });
@@ -1098,10 +1127,7 @@ $('logoBtn').addEventListener('click', () => $('logoFile').click());$('logoDel')
   const FIELDS = ['inEff','inEff2','inTag','inQ2','inP2','inMotor2','inQ','inP','inPoles','inRpm','inV','inMotor','inModel','inSpeedLabel','inProj','inItem','inQuote','inDate'];
   let st = { folder: '', files: [] };
   try { const r = JSON.parse(localStorage.getItem(KEY) || 'null'); if (r && Array.isArray(r.files)) st = r; } catch (e) {}
-  // Tên thư mục mặc định = DDT_ + ngày hôm nay theo giờ máy (không dùng toISOString vì nó tính theo UTC nên có thể lệch 1 ngày).
-  // Tên mặc định đã lưu từ ngày cũ sẽ tự cập nhật sang hôm nay; tên do người dùng tự đặt thì giữ nguyên.
-  const _t = new Date(), today = `${_t.getFullYear()}-${String(_t.getMonth() + 1).padStart(2, '0')}-${String(_t.getDate()).padStart(2, '0')}`;
-  if (!st.folder || /^DDT_\d{4}-\d{2}-\d{2}$/.test(st.folder)) st.folder = 'DDT_' + today;
+  if (!st.folder) st.folder = 'DDT_' + new Date().toISOString().slice(0, 10);
   let saveFail = false;
   const persist = () => { try { localStorage.setItem(KEY, JSON.stringify(st)); saveFail = false; } catch (e) { saveFail = true; } };
   const safe = s => String(s).replace(/[\\/:*?"<>|\x00-\x1f]/g, '_').trim().replace(/[. ]+$/, '') || 'Fan';
