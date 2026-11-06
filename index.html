@@ -259,6 +259,8 @@ details .fld{margin-top:8px}
       <summary>Thông tin trên phiếu</summary>
       <label class="fld"><span>Tên quạt (ô góc trái)</span><div class="inp"><input id="inTag" type="text" placeholder="VD: K-SEF-2F-01~02" value=""></div></label>
       <label class="fld"><span>Model (thanh tiêu đề)</span><div class="inp"><input id="inModel" type="text" placeholder="Tự động" value=""></div></label>
+      <label class="fld"><span>Chữ biểu đồ áp suất (dòng 1)</span><div class="inp"><input id="inPrTitle" type="text" placeholder="Fan Static Pressure" value=""></div></label>
+      <label class="fld"><span>Chữ biểu đồ áp suất (dòng 2)</span><div class="inp"><input id="inPrUnit" type="text" placeholder="Pa" value=""></div></label>
       <label class="fld"><span>Tốc độ hiển thị</span><div class="inp"><input id="inSpeedLabel" type="text" list="speedList" placeholder="Để trống = không in" value="">
         <datalist id="speedList"><option value="4P"><option value="6P"><option value="4P/6P"><option value="1460 Rpm"><option value="970 Rpm"><option value="1460/970 Rpm"></datalist></div></label>
       <label class="fld"><span>Dự án</span><div class="inp"><input id="inProj" type="text" value="Fan Selection"></div></label>
@@ -615,7 +617,7 @@ function readInputs(){
     T: 20, alt: 0, rpm: +v('inRpm'), V: +v('inV'), etaDrive: 1,     // đã bỏ khỏi form: khí 20 °C, mực biển, truyền động trực tiếp
     motor: opt('inMotor'), Dman: null,                              // đường kính cánh luôn tự tính
     Qh2: opt('inQ2'), P2: opt('inP2'), motor2: opt('inMotor2'), tag: v('inTag'), eff1: opt('inEff'), eff2: opt('inEff2'),
-    modelCustom: v('inModel'),
+    modelCustom: v('inModel'), prTitle: v('inPrTitle'), prUnit: v('inPrUnit'),
     speedCustom: v('inSpeedLabel')
   };
 }
@@ -712,7 +714,9 @@ function render(){
   const toH = p => p.Q * 3600;
   const opPrOf = c => i.basis === 'static' ? c.op.Ps : c.op.Pt;
   const opPr = opPrOf(C1);
-  const prName = i.basis === 'static' ? 'Fan Static Pressure' : 'Fan Total Pressure';
+  // chữ ở góc biểu đồ áp suất: để trống = mặc định (Fan Static/Total Pressure + Pa), có thể sửa tuỳ ý
+  const escH = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const prName = i.prTitle || (i.basis === 'static' ? 'Fan Static Pressure' : 'Fan Total Pressure'), prUnit = i.prUnit || 'Pa';
   const lab = k => C2 ? String(k + 1) : '';
   const effSeries = cs.map((c, k) => {
     if (!effOn[k]) return null;                      // không nhập hiệu suất -> không vẽ đường Eff
@@ -742,7 +746,7 @@ function render(){
     return { pts };            // đường hệ thống không ghi số: đã có số ở cuối đường áp suất đi qua cùng điểm
   });
   $('chPress').innerHTML = chart({ id:2, h:440, xmax:ax.max, xstep:ax.step, xdiv, ymax:ayPr.max, ystep:ayPr.step, xTitle, labelAt:.38,
-    title:prName, unit:'Pa', aria:'Đường áp suất theo lưu lượng và đường hệ thống',
+    title:escH(prName), unit:escH(prUnit), aria:'Đường áp suất theo lưu lượng và đường hệ thống',
     eff: effAct.length ? { max: effMax, perRow: effPerRow, title: 'Fan Total Eff %', series: effAct, label: { x: eL[0], y: eL[1] } } : null,
     series: sysSeries.concat(cs.map((c, k) => ({ pts: c.draw.map(p => [toH(p), pf(p)]), end: lab(k) }))),
     markers: cs.map((c, k) => ({ x: c.op.Q * 3600, y: opPrOf(c), label: '' })) });
@@ -1095,7 +1099,7 @@ $('logoBtn').addEventListener('click', () => $('logoFile').click());$('logoDel')
 
   /* ---- thư mục ---- */
   const KEY = 'fanFolderV1';
-  const FIELDS = ['inEff','inEff2','inTag','inQ2','inP2','inMotor2','inQ','inP','inPoles','inRpm','inV','inMotor','inModel','inSpeedLabel','inProj','inItem','inQuote','inDate'];
+  const FIELDS = ['inPrTitle','inPrUnit','inEff','inEff2','inTag','inQ2','inP2','inMotor2','inQ','inP','inPoles','inRpm','inV','inMotor','inModel','inSpeedLabel','inProj','inItem','inQuote','inDate'];
   let st = { folder: '', files: [] };
   try { const r = JSON.parse(localStorage.getItem(KEY) || 'null'); if (r && Array.isArray(r.files)) st = r; } catch (e) {}
   // Tên thư mục mặc định = DDT_ + ngày hôm nay theo giờ máy (không dùng toISOString vì nó tính theo UTC nên có thể lệch 1 ngày).
@@ -1341,7 +1345,7 @@ $('logoBtn').addEventListener('click', () => $('logoFile').click());$('logoDel')
     const i = +b.dataset.i, f = st.files[i]; if (!f) return;
     if (b.dataset.a === 'del'){ st.files.splice(i, 1); persist(); view(); msg(`Đã xoá ${f.name}.pdf.`, ''); }
     else if (b.dataset.a === 'load'){
-      for (const id of FIELDS) $(id).value = f.form[id] != null ? f.form[id] : (['inEff','inEff2','inTag','inQ2','inP2','inMotor2'].includes(id) ? '' : $(id).value);
+      for (const id of FIELDS) $(id).value = f.form[id] != null ? f.form[id] : (['inPrTitle','inPrUnit','inEff','inEff2','inTag','inQ2','inP2','inMotor2'].includes(id) ? '' : $(id).value);
       const r = document.querySelector(`input[name=basis][value=${f.form.basis}]`); if (r) r.checked = true;
       clearTimeout(timer); render(); msg(`Đã nạp lại thông số của ${f.name}. Sửa xong bấm Save PDF để thêm bản mới.`, 'ok');
     } else {
