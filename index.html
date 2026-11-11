@@ -136,7 +136,10 @@ details .fld{margin-top:8px}
 .sheet{background:#fff}
 
 /* ---------- nền động: ảnh kỹ thuật + cánh quạt quay nhẹ + làn gió ---------- */
-#bg{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;background:#eaf3f9}
+#bg{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;background:#f5fafd}
+#bg::after{content:"";position:absolute;inset:0;background:rgba(255,255,255,.42);pointer-events:none}   /* phủ trắng mờ cho nền sáng hơn */
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) #bg::after{display:none}}
+:root[data-theme="dark"] #bg::after{display:none}
 #bg svg{position:absolute;inset:0;display:block}
 .bgFan{animation:bgspin 75s linear infinite}
 .bgW{stroke:#3fb7ec;stroke-width:1.6;stroke-dasharray:110 520;opacity:.6;animation:bgwind linear infinite}
@@ -173,6 +176,30 @@ details .fld{margin-top:8px}
 .meta b{font-weight:600}
 .modelbar{display:flex;justify-content:space-between;gap:10px;border:1px solid var(--s-ink);padding:5px 9px;font:600 15px/1.2 var(--font-head);margin-bottom:6px}
 .sub2{font-size:11.5px;line-height:1.45;margin-bottom:8px}
+.sheetbody{display:grid;grid-template-columns:43.3% 55.1%;justify-content:space-between;align-items:start}
+.spec{font:12px/1.2 var(--font-ui);padding-top:6px}
+.spec .sh{display:grid;align-items:end;margin:13px 0 5px}
+.spec .sh:first-child{margin-top:0}
+.spec .sh u{font-weight:500;font-size:12.5px}
+.spec .sh b{font-weight:600;font-size:10px;text-align:right}
+.spec .c1{grid-template-columns:1fr 5.4em 3.4em}
+.spec .c2{grid-template-columns:1fr 4.4em 4.4em 3.4em}
+.spec .r{display:grid;align-items:baseline;min-height:23px}
+.spec .r b{font-weight:400;text-align:right;font-variant-numeric:tabular-nums}
+.spec .r i,.spec .sh i{font-style:normal;padding-left:.6em;font-size:11px}
+.spec .mdl{font-weight:600;min-height:23px;display:flex;align-items:center}
+.chleg{font-size:10px;line-height:1.4;margin:0 0 3px 10.3%}
+.chleg svg{vertical-align:middle;margin-left:3px}
+.noise{margin-top:16px;font:11.5px/1.2 var(--font-ui)}
+.noise .nh{margin-bottom:5px}.noise .nh u{font-weight:500;font-size:12.5px}
+.noise .nr{display:grid;grid-template-columns:minmax(0,2fr) repeat(8,1fr) 1.1fr;min-height:22px;align-items:center}
+.noise .nr b{font-weight:400;text-align:right;font-variant-numeric:tabular-nums}
+.noise .nr.hd b{font-weight:600}.noise .nr b:last-child{font-weight:600}
+@media (max-width:600px){.noise{overflow-x:auto}.noise .nr{min-width:520px}}
+.notes{margin-top:16px;font-size:11px;line-height:1.5}
+.notes p{margin:0}
+.inp textarea{width:100%;font:inherit;border:0;background:transparent;resize:vertical;padding:8px 10px;outline:none;color:inherit}
+@media (max-width:600px){.sheetbody{grid-template-columns:1fr}.spec{margin:0 0 10px}}
 .chart{display:block;width:100%;height:auto;overflow:visible}
 .chart text{font-family:'IBM Plex Sans',system-ui,Arial,sans-serif;fill:var(--s-ink);font-size:10px}
 .chart .tt{font-size:11px;font-weight:500}
@@ -247,22 +274,40 @@ details .fld{margin-top:8px}
       <summary>Thông tin trên phiếu</summary>
       <label class="fld"><span>Tên quạt (ô góc trái)</span><div class="inp"><input id="inTag" type="text" placeholder="VD: K-SEF-2F-01~02" value=""></div></label>
       <label class="fld"><span>Model (thanh tiêu đề)</span><div class="inp"><input id="inModel" type="text" placeholder="Tự động" value=""></div></label>
-      <label class="fld"><span>Chữ biểu đồ áp suất (dòng 1)</span><div class="inp"><input id="inPrTitle" type="text" placeholder="Fan Static Pressure" value=""></div></label>
-      <label class="fld"><span>Chữ biểu đồ áp suất (dòng 2)</span><div class="inp"><input id="inPrUnit" type="text" placeholder="Pa" value=""></div></label>
       <label class="fld"><span>Tốc độ hiển thị</span><div class="inp"><input id="inSpeedLabel" type="text" list="speedList" placeholder="Để trống = không in" value="">
         <datalist id="speedList"><option value="4P"><option value="6P"><option value="4P/6P"><option value="1460 Rpm"><option value="970 Rpm"><option value="1460/970 Rpm"></datalist></div></label>
+      <label class="fld"><span>Công ty (đầu phiếu)</span><div class="inp"><input id="inCompany" type="text" placeholder="Để trống = không in" value=""></div></label>
+      <label class="fld"><span>Điện thoại</span><div class="inp"><input id="inPhone" type="text" placeholder="Để trống = không in" value=""></div></label>
+      <label class="fld"><span>Fax</span><div class="inp"><input id="inFax" type="text" placeholder="Để trống = không in" value=""></div></label>
+      <label class="fld"><span>Khách hàng</span><div class="inp"><input id="inCustomer" type="text" placeholder="Để trống = không in" value=""></div></label>
       <label class="fld"><span>Dự án</span><div class="inp"><input id="inProj" type="text" value="Fan Selection"></div></label>
       <label class="fld"><span>Mã hàng</span><div class="inp"><input id="inItem" type="text" value="Temp 1"></div></label>
       <label class="fld"><span>Báo giá</span><div class="inp"><input id="inQuote" type="text" value="Temp"></div></label>
       <label class="fld"><span>Ngày</span><div class="inp"><input id="inDate" type="text"></div></label>
+      <label class="fld"><span>Fan Class</span><div class="inp"><input id="inClass" type="text" placeholder="Để trống = không in" value=""></div></label>
+      <label class="fld"><span>Maximum Rpm</span><div class="inp"><input id="inMaxRpm" type="text" placeholder="Để trống = không in" value=""></div></label>
+      <label class="fld"><span>Hiệu chỉnh tiếng ồn</span><div class="inp"><input id="inNoiseAdj" type="number" inputmode="decimal" step="any" placeholder="0 = theo ASHRAE"><em>dB</em></div></label>
+      <label class="fld"><span>Ghi chú cuối phiếu</span><div class="inp"><textarea id="inNotes" rows="3" placeholder="Mỗi dòng một ghi chú. Để trống = không in"></textarea></div></label>
     </details>
+
+    <div class="seg" role="radiogroup" aria-label="Loại quạt" style="margin:0 0 14px">
+      <label><input type="radio" name="ftype" value="centrifugal" checked><span>Quạt ly tâm</span></label>
+      <label><input type="radio" name="ftype" value="axial"><span>Quạt hướng trục</span></label>
+    </div>
 
     <fieldset>
       <legend>Điểm làm việc 1</legend>
       <label class="fld"><span>Lưu lượng 1</span><div class="inp"><input id="inQ" type="number" inputmode="decimal" min="1" step="any" value="15000"><em>m³/h</em></div></label>
       <label class="fld"><span>Áp suất 1</span><div class="inp"><input id="inP" type="number" inputmode="decimal" min="1" step="any" value="300"><em>Pa</em></div></label>
       <label class="fld"><span>Công suất động cơ 1</span><div class="inp"><input id="inMotor" type="number" inputmode="decimal" min="0" step="any" placeholder="Tự chọn"><em>kW</em></div></label>
-      <label class="fld"><span>Hiệu suất điểm 1</span><div class="inp"><input id="inEff" type="number" inputmode="decimal" min="10" max="95" step="any" placeholder="Để trống = không vẽ Eff"><em>%</em></div></label>
+      <label class="fld"><span>Hiệu suất điểm 1</span><div class="inp"><input id="inEff" type="number" inputmode="decimal" min="10" max="95" step="any" placeholder="Trống = ẩn Eff"><em>%</em></div></label>
+      <label class="fld"><span>Nhiệt độ khí</span><div class="inp"><input id="inTemp" type="number" inputmode="decimal" min="-50" max="250" step="any" value="20"><em>°C</em></div></label>
+      <label class="fld"><span>Cao độ</span><div class="inp"><input id="inAlt" type="number" inputmode="decimal" min="-500" max="5000" step="any" placeholder="0 = mực nước biển"><em>m</em></div></label>
+      <label class="fld"><span>Độ ẩm tương đối</span><div class="inp"><input id="inRH" type="number" inputmode="decimal" min="0" max="100" step="any" placeholder="Trống = khô (0)"><em>%</em></div></label>
+      <label class="fld"><span>Hệ số C hiệu ứng hệ thống · cửa xả (AMCA 201)</span><div class="inp"><input id="inSEo" type="number" inputmode="decimal" min="0" step="any" placeholder="Trống = 0"><em>C</em></div></label>
+      <label class="fld"><span>Hệ số C hiệu ứng hệ thống · cửa hút (AMCA 201)</span><div class="inp"><input id="inSEi" type="number" inputmode="decimal" min="0" step="any" placeholder="Trống = 0"><em>C</em></div></label>
+      <label class="fld"><span>Bụi trong khí</span><div class="inp"><input id="inDust" type="number" inputmode="decimal" min="0" step="any" placeholder="Trống = 0"><em>g/m³</em></div></label>
+      <label class="fld"><span>Đường kính cánh</span><div class="inp"><input id="inDia" type="number" inputmode="decimal" min="100" step="any" placeholder="Trống = tự tính"><em>mm</em></div></label>
       <div class="seg" role="radiogroup" aria-label="Loại áp suất nhập vào">
         <label><input type="radio" name="basis" value="static" checked><span>Áp suất tĩnh</span></label>
         <label><input type="radio" name="basis" value="total"><span>Áp suất toàn phần</span></label>
@@ -275,7 +320,7 @@ details .fld{margin-top:8px}
       <label class="fld"><span>Lưu lượng 2</span><div class="inp"><input id="inQ2" type="number" inputmode="decimal" min="1" step="any" placeholder="Để trống = 1 điểm"><em>m³/h</em></div></label>
       <label class="fld"><span>Áp suất 2</span><div class="inp"><input id="inP2" type="number" inputmode="decimal" min="1" step="any"><em>Pa</em></div></label>
       <label class="fld"><span>Công suất động cơ 2</span><div class="inp"><input id="inMotor2" type="number" inputmode="decimal" min="0" step="any" placeholder="Tự chọn"><em>kW</em></div></label>
-      <label class="fld"><span>Hiệu suất điểm 2</span><div class="inp"><input id="inEff2" type="number" inputmode="decimal" min="10" max="95" step="any" placeholder="Để trống = không vẽ Eff"><em>%</em></div></label>
+      <label class="fld"><span>Hiệu suất điểm 2</span><div class="inp"><input id="inEff2" type="number" inputmode="decimal" min="10" max="95" step="any" placeholder="Trống = ẩn Eff"><em>%</em></div></label>
       <p class="hint" id="duty2Info">Cùng một quạt, điểm 2 dùng tốc độ khác (tự tính theo định luật quạt) nên vẽ thêm 1 đường đặc tính.</p>
     </fieldset>
 
@@ -304,13 +349,22 @@ details .fld{margin-top:8px}
         <input type="file" id="logoFile" accept="image/*" hidden>
       </div>
       <div class="meta">
-        <div><p>Project : <span id="shProj"></span></p><p>Item Ref : <span id="shItem"></span></p></div>
+        <div>
+          <p class="co" id="shCoP" hidden><span id="shCo"></span></p>
+          <p id="shPhoneP" hidden>Phone : <span id="shPhone"></span></p>
+          <p id="shFaxP" hidden>Fax : <span id="shFax"></span></p>
+          <p id="shCustP" hidden>Customer : <span id="shCust"></span></p>
+          <p>Project : <span id="shProj"></span></p><p>Item Ref : <span id="shItem"></span></p>
+        </div>
         <div class="r"><p>Quote Ref : <span id="shQuote"></span></p><p>Date : <span id="shDate"></span></p></div>
       </div>
-      <div class="modelbar"><span id="shModel"></span><span id="shRpm"></span></div>
-      <div class="sub2" id="shSub"></div>
-      <div id="chPower"></div>
-      <div id="chPress"></div>
+      <div hidden><span id="shModel"></span><span id="shRpm"></span><span id="shSub"></span></div>
+      <div class="sheetbody">
+        <div class="spec" id="specTbl"></div>
+        <div class="charts"><div class="chleg" id="chLeg"></div><div id="chPower"></div><div id="chPress"></div></div>
+      </div>
+      <div class="noise" id="shNoise"></div>
+      <div class="notes" id="shNotes"></div>
       <div class="foot"><span id="shNote"></span><span></span></div>
     </article>
   </section>
@@ -337,11 +391,11 @@ details .fld{margin-top:8px}
 <script>
 // MODEL-START
 const PI = Math.PI;
-const KV = 0.12;            // áp suất động cửa xả = 12% Pt tham chiếu tại x = 1
-const XMAX = 1.68;          // lưu lượng cực đại (x = Q / Q tham chiếu)
-const X_TAB = [0,.2,.4,.5,.6,.8,1,1.1,1.2,1.3,1.4,1.5,1.6,1.68];
-const P_TAB = [1.12,1.13,1.11,1.08,1.07,1.05,1,.955,.88,.77,.62,.43,.20,0];       // Pt / Pt tham chiếu
-const W_TAB = [.42,.52,.65,.72,.79,.92,1,1.04,1.06,1.07,1.05,1.0,.93,.88];       // công suất / công suất tham chiếu
+let KV = 0.12;            // áp suất động cửa xả = 12% Pt tham chiếu tại x = 1
+let XMAX = 1.68;          // lưu lượng cực đại (x = Q / Q tham chiếu)
+let X_TAB = [0,.2,.4,.5,.6,.8,1,1.1,1.2,1.3,1.4,1.5,1.6,1.68];
+let P_TAB = [1.12,1.13,1.11,1.08,1.07,1.05,1,.955,.88,.77,.62,.43,.20,0];       // Pt / Pt tham chiếu
+let W_TAB = [.42,.52,.65,.72,.79,.92,1,1.04,1.06,1.07,1.05,1.0,.93,.88];       // công suất / công suất tham chiếu
 
 function pchip(xs, ys){
   const n = xs.length, h = [], d = [], m = new Array(n);
@@ -359,19 +413,42 @@ function pchip(xs, ys){
     return (2*t3 - 3*t2 + 1)*ys[i] + (t3 - 2*t2 + t)*h[i]*m[i] + (-2*t3 + 3*t2)*ys[i+1] + (t3 - t2)*h[i]*m[i+1];
   };
 }
-const SHAPE_P = pchip(X_TAB, P_TAB);
-const SHAPE_W = pchip(X_TAB, W_TAB);
-let W_PK_X = 0, W_PK_V = 0;      // vị trí và giá trị đỉnh của đường công suất chuẩn
-for (let x = 0; x <= XMAX; x += 0.001){ const w = SHAPE_W(x); if (w > W_PK_V){ W_PK_V = w; W_PK_X = x; } }
-let ETA_RAW_MAX = 0, X_E = 1;
-for (let x = 0.3; x <= 1.6; x += 0.001){ const e = x * SHAPE_P(x) / SHAPE_W(x); if (e > ETA_RAW_MAX){ ETA_RAW_MAX = e; X_E = x; } }
+let SHAPE_P, SHAPE_W, W_PK_X, W_PK_V, ETA_RAW_MAX, X_E;
+function calcShape(){
+  SHAPE_P = pchip(X_TAB, P_TAB); SHAPE_W = pchip(X_TAB, W_TAB);
+  W_PK_X = 0; W_PK_V = 0;      // vị trí và giá trị đỉnh của đường công suất chuẩn
+  for (let x = 0; x <= XMAX; x += 0.001){ const w = SHAPE_W(x); if (w > W_PK_V){ W_PK_V = w; W_PK_X = x; } }
+  ETA_RAW_MAX = 0; X_E = 1;
+  for (let x = 0.3; x <= 1.6; x += 0.001){ const e = x * SHAPE_P(x) / SHAPE_W(x); if (e > ETA_RAW_MAX){ ETA_RAW_MAX = e; X_E = x; } }
+}
 
 // Các dòng quạt (hệ số áp suất ψ tại x = 1, dải hệ số lưu lượng φ theo bề rộng cánh)
-const SERIES = [
+let SERIES = [
   { code:'H', name:'áp suất cao',                 psi:.92, phiMin:.10, phiMax:.28, dEta:0 },
   { code:'M', name:'áp suất trung bình',          psi:.68, phiMin:.14, phiMax:.38, dEta:-.02 },
   { code:'L', name:'áp suất thấp, lưu lượng lớn', psi:.48, phiMin:.18, phiMax:.55, dEta:-.05 }
 ];
+/* ---- hai loại quạt: ly tâm (mô hình gốc) và hướng trục (ước tính sơ bộ, đường đặc tính điển hình: áp suất cao nhất ở lưu lượng nhỏ, có vùng stall, công suất giảm dần khi lưu lượng tăng) ---- */
+const FAN_TYPES = {
+  centrifugal: { KV, XMAX, X_TAB, P_TAB, W_TAB, SERIES, dws: [1, 2], uMax: 110 },
+  axial: { KV: .2, XMAX: 1.6,
+    X_TAB: [0,.2,.4,.5,.6,.8,1,1.1,1.2,1.3,1.4,1.5,1.6],
+    P_TAB: [1.30,1.34,1.30,1.24,1.20,1.10,1,.92,.80,.64,.44,.22,0],
+    W_TAB: [1.30,1.32,1.28,1.24,1.20,1.10,1,.95,.90,.85,.80,.76,.72],
+    SERIES: [
+      { code:'H', name:'áp suất cao',     psi:.55, phiMin:.10, phiMax:.28, dEta:-.02 },
+      { code:'M', name:'áp suất trung bình', psi:.38, phiMin:.15, phiMax:.38, dEta:0 },
+      { code:'L', name:'áp suất thấp, lưu lượng lớn', psi:.26, phiMin:.22, phiMax:.55, dEta:-.02 }
+    ], dws: [1], uMax: 140 }
+};
+let FTYPE = 'centrifugal';
+function setFanType(t){
+  FTYPE = FAN_TYPES[t] ? t : 'centrifugal';
+  const c = FAN_TYPES[FTYPE];
+  KV = c.KV; XMAX = c.XMAX; X_TAB = c.X_TAB; P_TAB = c.P_TAB; W_TAB = c.W_TAB; SERIES = c.SERIES;
+  calcShape();
+}
+setFanType('centrifugal');
 const POLES = { 2:2900, 4:1460, 6:970, 8:730 };
 const MOTORS = [0.18,0.25,0.37,0.55,0.75,1.1,1.5,2.2,3,4,5.5,7.5,11,15,18.5,22,30,37,45,55,75,90,110,132,160,200,250,315,355,400,450,500,560,630,710,800,900,1000];
 
@@ -383,11 +460,23 @@ function bisect(f, a, b, it = 70){
   for (let i = 0; i < it; i++){ const m = 0.5*(a+b), fm = f(m); if (fa * fm <= 0){ b = m; fb = fm; } else { a = m; fa = fm; } }
   return 0.5*(a+b);
 }
-function airDensity(T, alt){
-  const p = 101325 * Math.pow(1 - 2.25577e-5 * alt, 5.25588);
-  return p / (287.05 * (273.15 + T));
+// Áp suất khí quyển theo độ cao: P(h) = P0·exp(−M·g·h / (R·(T+273.15)))
+function atmPressure(T, alt){
+  const P0 = 101275, M = 0.0289644, g = 9.80665, R = 8.314463;
+  return P0 * Math.exp(-M * g * alt / (R * (T + 273.15)));
+}
+function airDensity(T, alt, RH = 0){   // khí ẩm: ρ = Pd/(Rd·Tk) + Pv/(Rv·Tk), Pv = RH/100 · Psat (Magnus/Arden Buck)
+  const P = atmPressure(T, alt), Tk = 273.15 + T;
+  const Psat = 611.21 * Math.exp(17.502 * T / (T + 240.97));   // T °C, Pa
+  const Pv = (RH > 0 ? RH / 100 : 0) * Psat, Pd = P - Pv;
+  return Pd / (287.05 * Tk) + Pv / (461.495 * Tk);
 }
 function etaPeak(Dm, S, dw, phi){
+  if (FTYPE === 'axial'){
+    let e = clamp(.68 + .12 * Math.log(Dm*1000/250) / Math.log(5), .60, .82) + S.dEta;
+    e -= .10 * Math.pow(Math.log(phi / Math.sqrt(S.phiMin * S.phiMax)), 2);
+    return clamp(e, .40, .82);
+  }
   let e = .66 + .16 * Math.log(Dm*1000/250) / Math.log(5);
   e = clamp(e, .62, .84) + S.dEta + (dw === 2 ? .01 : 0);
   const mid = Math.sqrt(S.phiMin * S.phiMax);
@@ -448,13 +537,13 @@ function candidate(S, dw, a){   // a: {Q (m3/s), P, basis, n, rho, Dman (mm|null
   if (xop < .6) score -= .3 * (.6 - xop);
   if (xop > 1.4) score -= .3 * (xop - 1.4);
   if (D < .18 || D > 3.2) score -= .5;
-  if (fan.u > 110) score -= .5;
-  const valid = mism <= .03 && xop >= .5 && xop <= 1.5 && D >= .18 && D <= 3.2 && fan.u <= 110;
+  if (fan.u > FAN_TYPES[FTYPE].uMax) score -= .5;
+  const valid = mism <= .03 && xop >= .5 && xop <= 1.5 && D >= .18 && D <= 3.2 && fan.u <= FAN_TYPES[FTYPE].uMax;
   return { fan, op, score, valid, S, dw, mism, xop };
 }
 function selectBest(a){
   let best = null;
-  for (const S of SERIES) for (const dw of [1, 2]){
+  for (const S of SERIES) for (const dw of FAN_TYPES[FTYPE].dws){
     const c = candidate(S, dw, a);
     if (!best || (c.valid && !best.valid) || (c.valid === best.valid && c.score > best.score)) best = c;
   }
@@ -474,6 +563,16 @@ function interp(tab, x){
   return tab[tab.length-1][1];
 }
 function motorCurrent(kW, V){ return kW*1000 / (Math.sqrt(3) * V * interp(ETA_M, kW) * interp(COS_M, kW)); }
+// ---- Hiệu ứng hệ thống (AMCA 201-02, mục 7): SEF = C · (V/1,414)² · ρ  [Pa; V m/s; ρ kg/m³]  (≡ C · Pv)
+// C = hệ số tổn thất áp suất động của đường cong hiệu ứng hệ thống (Bảng 7.1, đường F…X) — người dùng nhập theo AMCA 201.
+// V = vận tốc định mức của chính quạt tại cửa xả / cửa hút (không phải vận tốc ống). SEF cửa xả và cửa hút cộng dồn (mục 7.1).
+const RHO_STD = 1.204;    // kg/m³ — khối lượng riêng chuẩn của đường đặc tính catalog (20 °C, mực nước biển, khô)
+function sefOf(fan, Q, rho, Co, Ci){
+  const Din = FTYPE === 'axial' ? fan.D : 0.8 * fan.D;
+  const Vo = Q / fan.Aout, Vi = Q / (PI / 4 * Din * Din);
+  const out = (Co || 0) * Math.pow(Vo / 1.414, 2) * rho, inn = (Ci || 0) * Math.pow(Vi / 1.414, 2) * rho;
+  return { out, inn, total: out + inn };
+}
 // MODEL-END
 
 /* =================== Giao diện =================== */
@@ -503,10 +602,10 @@ function niceFine(maxVal, target){
 }
 
 function chart(c){
-  const W = 640, L = 0, R = 0, T = 8, B = c.xTitle ? 46 : 24, H = c.h, iw = W - L - R, ih = H - T - B;
+  const W = 312, L = 0, R = 0, T = 8, B = c.xTitle ? 46 : 24, H = c.h, iw = W - L - R, ih = H - T - B;
   const sx = x => L + x / c.xmax * iw, sy = y => T + ih - y / c.ymax * ih;
   const id = 'cl' + c.id, K = 'var(--s-ink)';
-  let o = `<svg class="chart" viewBox="-36 0 ${W+48} ${H}" style="width:107.5%;margin-left:-5.625%" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${esc(c.aria)}"><defs><clipPath id="${id}"><rect x="${L}" y="${T}" width="${iw}" height="${ih}"/></clipPath></defs>`;
+  let o = `<svg class="chart" viewBox="-36 0 ${W+36} ${H}" style="width:100%" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${esc(c.aria)}"><defs><clipPath id="${id}"><rect x="${L}" y="${T}" width="${iw}" height="${ih}"/></clipPath></defs>`;
   const nx = Math.round(c.xmax / c.xstep), ny = Math.round(c.ymax / c.ystep);
  for (let i = 0; i <= nx; i++){
   const x = sx(i * c.xstep);
@@ -590,16 +689,18 @@ function chart(c){
   return o + '</svg>';
 }
 
-let last = null;
+let last = null, specData = null;
 function readInputs(){
   const v = id => $(id).value.trim();
   const opt = id => v(id) === '' ? null : +v(id);
   return {
-    Qh: +v('inQ'), P: +v('inP'), basis: document.querySelector('input[name=basis]:checked').value,
-    T: 20, alt: 0, rpm: +v('inRpm'), V: +v('inV'), etaDrive: 1,     // đã bỏ khỏi form: khí 20 °C, mực biển, truyền động trực tiếp
-    motor: opt('inMotor'), Dman: null,                              // đường kính cánh luôn tự tính
+    ftype: document.querySelector('input[name=ftype]:checked').value, Qh: +v('inQ'), P: +v('inP'), basis: document.querySelector('input[name=basis]:checked').value,
+    T: v('inTemp') === '' ? 20 : +v('inTemp'), alt: v('inAlt') === '' ? 0 : +v('inAlt'), RH: v('inRH') === '' ? 0 : Math.min(100, Math.max(0, +v('inRH'))),
+    seO: v('inSEo') === '' ? 0 : Math.max(0, +v('inSEo') || 0), seI: v('inSEi') === '' ? 0 : Math.max(0, +v('inSEi') || 0),   // hệ số C (AMCA 201) cửa xả / cửa hút
+    cls: v('inClass'), maxRpm: v('inMaxRpm'), dust: v('inDust'), noiseAdj: v('inNoiseAdj') === '' ? 0 : +v('inNoiseAdj'), rpm: +v('inRpm'), V: +v('inV'), etaDrive: 1,     // nhiệt độ khí nhập từ form (trống = 20 °C); mực biển, truyền động trực tiếp
+    motor: opt('inMotor'), Dman: opt('inDia') > 0 ? opt('inDia') : null,   // đường kính cánh: trống = tự tính, có nhập = dùng giá trị nhập
     Qh2: opt('inQ2'), P2: opt('inP2'), motor2: opt('inMotor2'), tag: v('inTag'), eff1: opt('inEff'), eff2: opt('inEff2'),
-    modelCustom: v('inModel'), prTitle: v('inPrTitle'), prUnit: v('inPrUnit'),
+    modelCustom: v('inModel'),
     speedCustom: v('inSpeedLabel')
   };
 }
@@ -610,13 +711,23 @@ function setNotes(list){
 function render(){
   last = null;
   const i = readInputs(), notes = [];
+  setFanType(i.ftype);
   if (!(i.Qh > 0) || !(i.P > 0) || !(i.rpm > 0) || !Number.isFinite(i.T) || i.T < -50 || i.T > 250){
     setNotes([{ t:'warn', h:'Nhập lưu lượng, áp suất và tốc độ lớn hơn 0, nhiệt độ trong khoảng −50 đến 250 °C.' }]);
     return;
   }
-  const rho = airDensity(i.T, i.alt);
-  const a = { Q: i.Qh / 3600, P: i.P, basis: i.basis, n: i.rpm, rho, Dman: i.Dman };
-  const best = selectBest(a), f = best.fan, op = best.op;
+  const rho = airDensity(i.T, i.alt, i.RH);
+  // Áp suất quạt phải tạo = tổn thất hệ thống + SEF (AMCA 201). SEF phụ thuộc vận tốc cửa quạt nên lặp đến khi hội tụ.
+  let sef = { out: 0, inn: 0, total: 0 }, a, best;
+  for (let it = 0; it < 12; it++){
+    a = { Q: i.Qh / 3600, P: i.P + sef.total, basis: i.basis, n: i.rpm, rho, Dman: i.Dman };
+    best = selectBest(a);
+    const nx = sefOf(best.fan, a.Q, rho, i.seO, i.seI), ok = Math.abs(nx.total - sef.total) < 0.01;
+    sef = nx;
+    if (ok || !(i.seO > 0 || i.seI > 0)) break;
+  }
+  const f = best.fan, op = best.op;
+  const sefAt = (Q, fan) => sefOf(fan, Q, rho, i.seO, i.seI);
   const Qmaxh = f.Qmax * 3600;
 
   // ---- đường cong. Điểm 1 = quạt đã chọn. Điểm 2 = CÙNG quạt đó ở tốc độ khác (định luật quạt: Q ~ n, P ~ n²)
@@ -630,24 +741,21 @@ function render(){
     const mot = motorFor(op.P, peakW, eDrive, manualKW);      // công suất động cơ (nhập tay hoặc tự chọn)
     // Công suất động cơ nhập tay là NGƯỠNG TRẦN của đường cong: đỉnh đường cong đặt đúng tại điểm làm việc (= kW nhập),
     // hai bên đỉnh co giãn theo trục lưu lượng nên không bao giờ vượt quá kW nhập.
-    // Quạt thực tế không chạy tới đỉnh công suất động cơ: đỉnh đường công suất vẽ ở ~88% (động cơ nhỏ ~5 kW) đến ~92% (động cơ lớn ~30 kW) của kW nhập
-    const loadF = Math.min(0.95, Math.max(0.8, 0.84 + 0.055 * Math.log10(Math.max(0.1, mot.chosen))));
-    const pkKW = mot.manual ? mot.chosen * loadF : mot.chosen;
-    const kPow = mot.manual ? pkKW / (op.P / eDrive / 1000) : 1;
-    const xOpM = op.Q / fan.Qref, canMap = xOpM > 0.05 && xOpM < XMAX - 0.02;
+    const kPow = mot.manual ? mot.chosen / (op.P / eDrive / 1000) : 1;
+    const xOpM = op.Q / fan.Qref, canMap = FTYPE !== 'axial' && xOpM > 0.05 && xOpM < XMAX - 0.02;
     const toMotor = p => {                                   // công suất động cơ tại từng lưu lượng, kW
-      if (!mot.manual) return p.P / eDrive / 1000;
-      if (!canMap) return Math.min(p.P / eDrive / 1000 * kPow, pkKW);
+      if (!mot.manual || FTYPE === 'axial') return p.P / eDrive / 1000;     // quạt hướng trục: vẽ công suất trục thật (công suất cao nhất ở lưu lượng nhỏ), kW động cơ chỉ để chọn motor
+      if (!canMap) return Math.min(p.P / eDrive / 1000 * kPow, mot.chosen);
       const x = p.Q / fan.Qref;
       const xm = x <= xOpM ? x * W_PK_X / xOpM : W_PK_X + (x - xOpM) * (XMAX - W_PK_X) / (XMAX - xOpM);
-      return Math.min(pkKW * SHAPE_W(xm) / W_PK_V, pkKW);
+      return Math.min(mot.chosen * SHAPE_W(xm) / W_PK_V, mot.chosen);
     };
-    return { fan, op, pts, peakW, mot, pkKW, toMotor, kSys: aPt.P / (aPt.Q * aPt.Q) };
+    return { fan, op, pts, peakW, mot, toMotor, kSys: aPt.P / (aPt.Q * aPt.Q) };
   };
   const C1 = mkCurve(f, a, i.motor);
   let C2 = null, n2 = null, info2 = '';
   if (i.dual){
-    const a2 = { Q: i.Qh2 / 3600, P: i.P2, basis: i.basis, n: i.rpm, rho, Dman: i.Dman };
+    const a2 = { Q: i.Qh2 / 3600, P: i.P2 + sefAt(i.Qh2 / 3600, f).total, basis: i.basis, n: i.rpm, rho, Dman: i.Dman };
     const opA = opPoint(f, a2);                              // giao điểm ở tốc độ điểm 1
     if (opA.Q > 0.01 * f.Qmax && opA.Q < 0.999 * f.Qmax){
       n2 = i.rpm * a2.Q / opA.Q;                             // tốc độ để đường đặc tính đi qua điểm 2
@@ -661,7 +769,7 @@ function render(){
   const cs = C2 ? [C1, C2] : [C1];
   const mot = C1.mot;
 
-  const ayP = niceAxis(Math.max(...cs.map(c => c.mot.manual ? c.pkKW : c.peakW / eDrive / 1000)) * 1.08, 12, true);
+  const ayP = niceAxis(Math.max(...cs.map(c => c.mot.manual && FTYPE !== 'axial' ? c.mot.chosen : Math.max(c.peakW / eDrive / 1000, FTYPE === 'axial' && c.mot.manual ? c.mot.chosen : 0))) * 1.08, 8, true);
   // Đường hiệu suất: xuất phát 5% tại lưu lượng 0, đi qua đúng hiệu suất nhập (hoặc tự tính) tại điểm làm việc
   const effIn = [i.eff1, i.eff2];
   // Đường hiệu suất: đỉnh nằm ĐÚNG tại lưu lượng của điểm làm việc (thẳng hàng với dấu tròn), giá trị đỉnh = hiệu suất nhập (mặc định 75%).
@@ -681,7 +789,7 @@ function render(){
   };
   const effPeak = Math.max(0, ...cs.flatMap((c, k) => effOn[k] ? effCurve(c, k, c.pts.map(p => p.Q)) : []));
   const effMax = effPeak <= 80.5 ? 80 : 100;
-  const ayPr = niceFine(Math.max(...cs.flatMap(c => c.pts.map(pf))) * 1.05, effMax > 80 ? 14 : 12);   // nhiều hàng ngang hơn để thang Eff 10%/hàng có chỗ trống phía trên
+  const ayPr = niceFine(Math.max(...cs.flatMap(c => c.pts.map(pf))) * 1.05, effMax > 80 ? 11 : 10);   // nhiều hàng ngang hơn để thang Eff 10%/hàng có chỗ trống phía trên
   // Thang hiệu suất bám theo lưới ngang: mỗi hàng ngang = 10% (hoặc 20% nếu lưới quá ít hàng); số hiệu suất lớn nhất (80/100) có thể nằm giữa chừng, phần lưới còn lại bỏ trống
   const effPerRow = Math.round(ayPr.max / ayPr.step) >= effMax / 10 ? 10 : 20;
   // Cắt đuôi đường cong: dừng khi áp suất còn ~3% thang đo, không vẽ bò dọc đáy khung (như ảnh mẫu)
@@ -693,15 +801,13 @@ function render(){
   }
   const Qendh = Math.max(...cs.map(c => c.draw[c.draw.length - 1].Q * 3600));
   const END_FILL = 0.93;                   // đường cong chiếm tối đa 93% chiều ngang, phần còn lại để trống bên phải
-  const ax = niceFine(Qendh / END_FILL, 14);   // số cột mong muốn của trục lưu lượng
+  const ax = niceFine(Qendh / END_FILL, 12);   // số cột mong muốn của trục lưu lượng
   const xdiv = ax.max >= 5000 ? 1000 : 1;
   const xTitle = xdiv === 1000 ? 'Volume Flow M3/HR X 1000' : 'Volume Flow M3/HR';
   const toH = p => p.Q * 3600;
   const opPrOf = c => i.basis === 'static' ? c.op.Ps : c.op.Pt;
   const opPr = opPrOf(C1);
-  // chữ ở góc biểu đồ áp suất: để trống = mặc định (Fan Static/Total Pressure + Pa), có thể sửa tuỳ ý
-  const escH = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  const prName = i.prTitle || (i.basis === 'static' ? 'Fan Static Pressure' : 'Fan Total Pressure'), prUnit = i.prUnit || 'Pa';
+  const prName = i.basis === 'static' ? 'Fan Static Pressure' : 'Fan Total Pressure';
   const lab = k => C2 ? String(k + 1) : '';
   const effSeries = cs.map((c, k) => {
     if (!effOn[k]) return null;                      // không nhập hiệu suất -> không vẽ đường Eff
@@ -709,12 +815,9 @@ function render(){
     const Qs = c.draw.map(p => p.Q);
     const io = Qs.findIndex(q => q >= c.op.Q);
     if (io >= 0 && Qs[io] !== c.op.Q) Qs.splice(io, 0, c.op.Q);
-    const qs0 = (0.004 + 0.025 * k) * ax.max / 3600;    // điểm bắt đầu: cách trục Y rất ít; đường 2 xa hơn đường 1 một chút để 2 đường không dính nhau
-    const is0 = Qs.findIndex(q => q >= qs0);
-    if (is0 >= 0 && Qs[is0] !== qs0) Qs.splice(is0, 0, qs0);
     const v = effCurve(c, k, Qs);
     // đường hiệu suất cách trục đứng một chút (như đường mẫu), tại đó = 5%
-    const j0 = Math.max(0, Qs.indexOf(qs0));
+    const j0 = Math.max(0, Qs.findIndex(q => q >= (0.015 + 0.05 * k) * ax.max / 3600));
     const jo = Math.max(0, Qs.indexOf(c.op.Q)), v0 = v[j0], eOp = v[jo];
     const w = v.map((y, j) => (j <= jo && eOp - v0 > 1) ? 5 + (y - v0) * (eOp - 5) / (eOp - v0) : y);
     return Qs.slice(j0).map((q, j) => [q * 3600, w[j + j0]]);
@@ -722,18 +825,9 @@ function render(){
   const effAct = effSeries.map((pts, k) => pts ? { pts, end: lab(k) } : null).filter(Boolean);
   const e1 = effAct.length ? effAct[0].pts : null, eL = e1 ? e1[Math.min(e1.length - 1, Math.floor(e1.length * 0.8))] : null;
 
-  // Đường không xuất phát từ 0 (công suất, áp suất quạt) bắt đầu cách trục Y một chút; chỉ đường chạy từ gốc 0 (đường hệ thống) mới sát trục
-  const q0h = 0.004 * ax.max;      // chỉ cách trục Y một chút xíu (~0.4% chiều ngang)
-  const startOff = (pts, ymax) => {
-    if (!pts.length || !(pts[0][1] > 0.02 * ymax)) return pts;
-    const j = pts.findIndex(p => p[0] >= q0h);
-    if (j <= 0) return pts;
-    const a = pts[j - 1], b = pts[j], u = (q0h - a[0]) / (b[0] - a[0]);   // nội suy đúng tại q0h
-    return [[q0h, a[1] + (b[1] - a[1]) * u]].concat(pts.slice(j));
-  };
-  $('chPower').innerHTML = chart({ id:1, h:336, xmax:ax.max, xstep:ax.step, xdiv, ymax:ayP.max, ystep:ayP.step, labelAt:.22,
+  $('chPower').innerHTML = chart({ id:1, h:200, xmax:ax.max, xstep:ax.step, xdiv, ymax:ayP.max, ystep:ayP.step, labelAt:.22,
     title:'Fan Power', unit:'kW', aria:'Đường công suất theo lưu lượng',
-    series: cs.map((c, k) => ({ pts: startOff(c.draw.map(p => [toH(p), c.toMotor(p)]), ayP.max), end: lab(k) })),
+    series: cs.map((c, k) => ({ pts: c.draw.map(p => [toH(p), c.toMotor(p)]), end: lab(k) })),
     markers: cs.map((c, k) => ({ x: c.op.Q * 3600, y: c.toMotor(c.op), label: '' })) });
 
   // Đường hệ thống chỉ kéo qua điểm làm việc một đoạn ngắn, không chạm khung trên
@@ -742,10 +836,10 @@ function render(){
     for (let k = 0; k <= 80; k++){ const Q = qEnd * k / 80; pts.push([Q*3600, c.kSys*Q*Q]); }
     return { pts };            // đường hệ thống không ghi số: đã có số ở cuối đường áp suất đi qua cùng điểm
   });
-  $('chPress').innerHTML = chart({ id:2, h:440, xmax:ax.max, xstep:ax.step, xdiv, ymax:ayPr.max, ystep:ayPr.step, xTitle, labelAt:.38,
-    title:escH(prName), unit:escH(prUnit), aria:'Đường áp suất theo lưu lượng và đường hệ thống',
+  $('chPress').innerHTML = chart({ id:2, h:280, xmax:ax.max, xstep:ax.step, xdiv, ymax:ayPr.max, ystep:ayPr.step, xTitle, labelAt:.38,
+    title:prName, unit:'Pa', aria:'Đường áp suất theo lưu lượng và đường hệ thống',
     eff: effAct.length ? { max: effMax, perRow: effPerRow, title: 'Fan Total Eff %', series: effAct, label: { x: eL[0], y: eL[1] } } : null,
-    series: sysSeries.concat(cs.map((c, k) => ({ pts: startOff(c.draw.map(p => [toH(p), pf(p)]), ayPr.max), end: lab(k) }))),
+    series: sysSeries.concat(cs.map((c, k) => ({ pts: c.draw.map(p => [toH(p), pf(p)]), end: lab(k) }))),
     markers: cs.map((c, k) => ({ x: c.op.Q * 3600, y: opPrOf(c), label: '' })) });
 
   // ---- động cơ
@@ -754,23 +848,96 @@ function render(){
 
   // ---- thông tin phiếu
   const Dmm = Math.round(f.D * 1000);
-  const autoModel = `BI-${Dmm}-${best.S.code}${best.dw}`;
+  const autoModel = FTYPE === 'axial' ? `AX-${Dmm}-${best.S.code}` : `BI-${Dmm}-${best.S.code}${best.dw}`;
   const model = i.modelCustom ? i.modelCustom : autoModel;
   const proj = $('inProj').value, item =$('inItem').value, quote = $('inQuote').value, date =$('inDate').value;
   $('shProj').textContent = proj; $('shItem').textContent = item; $('shQuote').textContent = quote; $('shDate').textContent = date;
   $('shTag').textContent = i.tag; $('shTagBox').hidden = !i.tag;
+  [['Co','inCompany'], ['Phone','inPhone'], ['Fax','inFax'], ['Cust','inCustomer']].forEach(([k, id]) => { const t = $(id).value.trim(); $('sh' + k).textContent = t; $('sh' + k + 'P').hidden = !t; });
   $('shModel').textContent = model; $('shRpm').textContent = i.speedCustom;   // để trống = không in tốc độ
   const basisTxt = i.basis === 'static' ? 'tĩnh' : 'toàn phần';
-  const duty = (q, p, kw) => `${Math.round(q)} M3/HR @ ${num(p, p < 100 ? 1 : 0)} PA @ Fan: ${kw} kW`;
+  const tTxt = String(+i.T.toFixed(1));
+  const duty = (q, p) => `${Math.round(q)} M3/HR @ ${num(p, p < 100 ? 1 : 0)} PA @ ${tTxt} Deg.C.`;
   const pTxt = p => num(p, p < 100 ? 1 : 0);
   $('shSub').textContent = C2
-    ? `Duty : ${Math.round(i.Qh)}/${Math.round(i.Qh2)} M3/HR @ ${pTxt(i.P)}/${pTxt(i.P2)} PA @ Fan: ${C1.mot.chosen}/${C2.mot.chosen} kW`
-    : `Duty : ${duty(i.Qh, i.P, mot.chosen)}`;
+    ? `Duty : ${Math.round(i.Qh)}/${Math.round(i.Qh2)} M3/HR @ ${pTxt(i.P)}/${pTxt(i.P2)} PA @ ${tTxt} Deg.C.`
+    : `Duty : ${duty(i.Qh, i.P)}`;
+
+  // ---- các khối thông số trên phiếu (ISO 5801 / AMCA 210: Pt = Ps + Pv, Pv = ½·ρ·v², v = Q / A; ρ = (p − pv)/(Rd·T) + pv/(Rv·T); Pshaft = Q·Pt / η_t; công suất ∝ ρ; ΔT = Pshaft / (ṁ·cp))
+  const fmt = (v, d = 0) => Number.isFinite(v) ? v.toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d }) : '-';
+  const esc = t => String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const patm = atmPressure(i.T, i.alt), rho20 = airDensity(20, i.alt, i.RH);
+  const cols = [{ c: C1, n: i.rpm, q: i.Qh }].concat(C2 ? [{ c: C2, n: n2, q: i.Qh2 }] : []);
+  const nc = cols.length, per = fn => cols.map(fn);
+  const Dm = Dmm / 1000, Din = FTYPE === 'axial' ? Dm : 0.8 * Dm;            // đường kính cửa hút ước tính (quạt ly tâm ≈ 0,8·D)
+  const fanRows = [['Speed:', per(x => fmt(x.n)), 'Rpm'], ['Impeller Dia.:', per(() => fmt(Dmm)), 'mm']];
+  if (i.cls) fanRows.push(['Fan Class:', per(() => i.cls), '']);
+  if (i.maxRpm) fanRows.push(['Maximum Rpm:', per(() => Number.isFinite(+i.maxRpm) ? fmt(+i.maxRpm) : i.maxRpm), 'Note 1']);
+  fanRows.push(
+    ['Shaft Power @ 20 Deg.C:', per(x => fmt(x.c.op.P * rho20 / rho / 1000, 2)), 'kW'],
+    ['Shaft Power @ Duty Temp:', per(x => fmt(x.c.op.P / 1000, 2)), 'kW'],
+    ['Nominal Motor:', per(x => String(x.c.mot.chosen)), 'kW'],
+    ['Tip Speed:', per(x => fmt(Math.PI * Dm * x.n / 60, 1)), 'm/s'],
+    ['Inlet Velocity:', per(x => fmt(x.c.op.Q / (Math.PI / 4 * Din * Din), 1)), 'm/s'],
+    ['Outlet Velocity:', per(x => fmt(x.c.op.Q / x.c.fan.Aout, 1)), 'm/s'],
+    ['Temp Rise:', per(x => fmt(x.c.op.P / (rho * x.c.op.Q * 1005), 1)), 'Deg.C.']);
+  specData = { head: ['Duty 1', 'Duty 2'].slice(0, nc), eff: effAct.length > 0, sections: [
+    { h: 'Gas Properties :', dual: false, rows: [
+      ['Abs Inlet Pressure:', [fmt(patm)], 'pa'], ['Operating Temp:', [tTxt], 'Deg.C.'], ['Humidity:', [String(+i.RH.toFixed(1))], '%'],
+      ['Specific Gravity:', ['1'], ''], ['Inlet Density:', [fmt(rho, 4)], 'Kg/m3'], ['Dust Load:', [String(Math.max(0, +i.dust || 0))], 'g/m3'] ] },
+    { h: 'Duty Required :', dual: true, rows: [
+      ['Inlet Volume Flow:', per(x => fmt(x.q)), 'm3/hr'], ['Fan Static Pressure:', per(x => fmt(x.c.op.Ps)), 'pa'],
+      ['Dynamic Pressure:', per(x => fmt(x.c.op.Pv)), 'pa'], ['Fan Total Pressure:', per(x => fmt(x.c.op.Pt)), 'pa'] ]
+        .concat(i.seO > 0 || i.seI > 0 ? [['System Effect Factor:', per(x => fmt(sefAt(x.c.op.Q, x.c.fan).total, 1)), 'pa']] : [])
+        .concat(Math.abs(rho - RHO_STD) / RHO_STD > 0.02 ? [['Total Press. @ 1.204 kg/m3:', per(x => fmt(x.c.op.Pt * RHO_STD / rho)), 'pa']] : []) },
+    { h: 'Fan Selected :', dual: true, model, rows: fanRows }
+  ] };
+
+  /* ---- tiếng ồn (ước tính theo phương pháp ASHRAE; cùng cấu trúc tính với bảng Noise Details của các hãng):
+     Lw(f) = Kw(f) + 10·log(Q/Q0) + 20·log(Pt/P0) + BFI (Q0 = 0,472 l/s, P0 = 248,8 Pa) — công suất âm vào ống hút HOẶC ống đẩy;
+     Internal SWL = Lw + 3 dB (tổng trong vỏ quạt, theo Twin City FE-3800);
+     Free Inlet/Outlet SPL(1 m, bán cầu) = Lw − ERL(D) + A(f) − 8, ERL = 10·log[1 + (1,025·c/(π·f·D))²] (đầu ống hở không mặt bích);
+     Outside Casing = Internal SWL − TL(vỏ thép 3 mm, định luật khối lượng) + A(f) − 8 */
+  const OCT = [63, 125, 250, 500, 1000, 2000, 4000, 8000], AW = [-26.2, -16.1, -8.6, -3.2, 0, 1.2, 1.0, -1.1];
+  const KWT = { centrifugal: { kw: [35, 35, 34, 32, 31, 24, 18, 10], bfi: 3, z: 10 }, axial: { kw: [42, 39, 41, 42, 40, 37, 35, 25], bfi: 6, z: 8 } }[FTYPE];
+  const lsum = a => 10 * Math.log10(a.reduce((t, l) => t + Math.pow(10, l / 10), 0));
+  const erl = (f, D) => 10 * Math.log10(1 + Math.pow(1.025 * 343 / (Math.PI * f * D), 2));
+  const TLW = [0.5, 1, 2, 3, 5, 7, 10, 15, 20];
+  const TLT = [[4,5,9,13,18,23,28,34],[5,9,13,18,23,28,34,39],[9,13,18,23,28,34,39,45],[11,16,21,26,31,37,42,48],[15,19,25,30,35,41,46,52],
+    [17,22,27,33,38,43,49,55],[20,25,30,35,41,46,52,58],[23,28,33,39,44,50,55,61],[25,30,35,41,46,52,58,63]];   // TL (dB) theo khối lượng lb/ft² (Twin City FE-3800, bảng 2)
+  const tlCas = lb => { let j = 0; while (j < TLW.length - 2 && lb >= TLW[j + 1]) j++;
+    const t = Math.min(1, Math.max(0, Math.log(lb / TLW[j]) / Math.log(TLW[j + 1] / TLW[j])));
+    return TLT[j].map((v, b) => v * (1 - t) + TLT[j + 1][b] * t); };
+  const casingTL = tlCas(3e-3 * 7850 * 0.2048);                               // vỏ thép dày 3 mm ≈ 4,8 lb/ft²
+  const noiseOf = x => {
+    const M = 10 * Math.log10(x.c.op.Q * 1000 / 0.4719) + 20 * Math.log10(Math.max(x.c.op.Pt, 1) / 248.84) + i.noiseAdj;
+    const bpf = x.n * KWT.z / 60, bi = OCT.reduce((b, f, j) => Math.abs(Math.log(bpf / f)) < Math.abs(Math.log(bpf / OCT[b])) ? j : b, 0);
+    const lw = OCT.map((f, j) => KWT.kw[j] + M + (j === bi ? KWT.bfi : 0)), swl = lw.map(l => l + 3);
+    const Do = Math.sqrt(4 * x.c.fan.Aout / Math.PI);
+    return { swl, inl: lw.map((l, j) => l - erl(OCT[j], Din) + AW[j] - 8), out: lw.map((l, j) => l - erl(OCT[j], Do) + AW[j] - 8), cas: swl.map((l, j) => l - casingTL[j] + AW[j] - 8) };
+  };
+  const nz = cols.map(noiseOf), nzRows = [];
+  [['swl', 'Internal SWL dB'], ['inl', 'Free Inlet SPL dBA'], ['out', 'Free Outlet SPL dBA'], ['cas', 'Outside Casing dBA']].forEach(([k, lab]) =>
+    nz.forEach((d, c) => nzRows.push([lab + (nc > 1 ? ` (D${c + 1})` : ''), d[k].map(v => String(Math.max(0, Math.round(v)))), String(Math.max(0, Math.round(lsum(d[k]))))])));
+  specData.noise = { head: ['63 Hz', '125 Hz', '250 Hz', '500 Hz', '1 kHz', '2 kHz', '4 kHz', '8 kHz', 'Total'], rows: nzRows };
+  specData.autoNotes = ['Motor noise is NOT included in the figures above.',
+    'Sound pressure levels (SPL) assume free-field hemispherical radiation at 1 metre; casing levels assume a 3 mm steel casing with inlet and outlet ducted.',
+    'Sound power levels are estimated per the ASHRAE method (Lw = Kw + 10logQ + 20logP + BFI); confirm with AMCA 300 test data.']
+    .concat(i.maxRpm ? ['Note 1) The max rpm may require a larger motor and/or upgraded drive components.'] : []);
+  $('shNoise').innerHTML = `<div class="nh"><u>Noise Details :</u></div><div class="nr hd"><span></span>${specData.noise.head.map(h => `<b>${h}</b>`).join('')}</div>` +
+    nzRows.map(r => `<div class="nr"><span>${esc(r[0])}</span>${r[1].map(v => `<b>${v}</b>`).join('')}<b>${r[2]}</b></div>`).join('');
+  $('shNotes').replaceChildren(...specData.autoNotes.concat($('inNotes').value.split('\n').map(t => t.trim()).filter(Boolean)).map(t => { const p = document.createElement('p'); p.textContent = t; return p; }));
+  const pad = (vs, dual = true) => (dual ? vs.concat(Array(nc - vs.length).fill('')) : Array(nc - vs.length).fill('').concat(vs)).map(v => `<b>${v}</b>`).join('');   // khối dùng chung 2 điểm: giá trị nằm cột cuối
+  $('specTbl').innerHTML = specData.sections.map(sc =>
+    `<div class="sh c${nc}"><u>${esc(sc.h)}</u>${sc.dual && nc > 1 ? specData.head.map(t => `<b>${t}</b>`).join('') : pad([])}<i></i></div>` +
+    (sc.model ? `<div class="mdl">${esc(sc.model)}</div>` : '') +
+    sc.rows.map(r => `<div class="r c${nc}"><span>${esc(r[0])}</span>${pad(r[1].map(esc), sc.dual)}<i>${esc(r[2])}</i></div>`).join('')).join('');
+  $('chLeg').innerHTML = (effAct.length ? '<div>Fan Total Efficiency<svg width="34" height="8" viewBox="0 0 34 8" aria-hidden="true"><path d="M0 4H8M11 4H12M15 4H23M26 4H27M30 4H34" stroke="currentColor" stroke-width="1.2" fill="none"/></svg></div>' : '') + `<div>${$('shSub').textContent}</div>`;
 
   // ---- khối kết quả trên màn hình
   const kv = (t, v, u) => `<div><dt>${t}</dt><dd>${v}${u ? `<small>${u}</small>` : ''}</dd></div>`;
   const motorNote = mot.manual ? (mot.chosen < mot.need ? ' · thiếu' : (mot.chosen < mot.req ? ' · thấp hơn khuyến nghị' : '')) : '';
-  $('result').innerHTML = `<div class="model"><b>${model}</b><span>Quạt ly tâm cánh nghiêng sau, dòng ${best.S.name}, ${best.dw === 2 ? '2 cửa hút' : '1 cửa hút'}</span></div>
+  $('result').innerHTML = `<div class="model"><b>${model}</b><span>${FTYPE === 'axial' ? `Quạt hướng trục, dòng ${best.S.name}` : `Quạt ly tâm cánh nghiêng sau, dòng ${best.S.name}, ${best.dw === 2 ? '2 cửa hút' : '1 cửa hút'}`}</span></div>
     <h2>Điểm làm việc${C2 ? ' 1' : ''}</h2>
     <dl class="kv">
       ${kv('Lưu lượng', Math.round(op.Q*3600), 'm³/h')}
@@ -783,6 +950,11 @@ function render(){
       ${kv('Bề rộng cánh b/D', num(f.phi/0.88,2), '')}
       ${kv('Tốc độ đầu cánh', num(f.u,1), 'm/s')}
       ${kv('Vận tốc cửa xả', num(op.Q/f.Aout,1), 'm/s')}
+      ${kv('Công suất khí động', num(op.Q*op.Pt/1000,2), 'kW')}
+      ${kv('Mô-men trục', num(op.P*60/(2*PI*i.rpm),1), 'N·m')}
+      ${kv('Lưu lượng khối', num(rho*op.Q,3), 'kg/s')}
+      ${kv('Áp suất toàn phần @ ρ chuẩn 1,204', num(op.Pt*RHO_STD/rho,0), 'Pa')}
+      ${kv('Hiệu ứng hệ thống (SEF)', num(sef.total,1), 'Pa')}
       ${kv('Động cơ khuyến nghị', mot.chosen + motorNote, 'kW')}
       ${kv('Dòng định mức ~', num(Irated,1), `A · ${i.V} V`)}
       ${kv('Dòng tại điểm làm việc ~', num(Irun,1), 'A')}
@@ -862,7 +1034,7 @@ $('logoBtn').addEventListener('click', () => $('logoFile').click());$('logoDel')
   const PW = 595.28, PH = 841.89;
   const enc = s => { const u = new Uint8Array(s.length); for (let i = 0; i < s.length; i++) u[i] = s.charCodeAt(i) & 255; return u; };
   const clean = s => String(s == null ? '' : s).normalize('NFKD').replace(/[̀-ͯ]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D')
-    .replace(/[^\x20-\x7e]/g, '?');
+    .replace(/[^\x20-\x7e\xb0]/g, '?');
   const esc = s => s.replace(/[\\()]/g, m => '\\' + m);
   const tw = (s, size, bold) => { const t = bold ? WB : WR; let w = 0; for (const ch of s){ const c = ch.charCodeAt(0) - 32; w += (t[c] == null ? 556 : t[c]); } return w * size / 1000; };
   const f2 = n => (+n).toFixed(2);
@@ -926,7 +1098,101 @@ $('logoBtn').addEventListener('click', () => $('logoFile').click());$('logoDel')
   }
 
   /* ---- một trang A4 từ ảnh chụp (snap) ---- */
-  function pageContent(sn, logo){
+  /* ---- phiếu A4 kiểu mới: đầu phiếu + các khối thông số bên trái + 2 biểu đồ nhỏ bên phải + ghi chú ---- */
+  function pageContentV2(sn, logo){
+    const mm = v => v * K, X = v => f2(mm(v)), Y = v => f2((297 - v) * K), base = v => (297 - v) * K;
+    let o = '0 G 0 g\n';
+    if (logo){
+      let w = Math.min(60, 19 * logo.w / logo.h), h = w * logo.h / logo.w;
+      o += `q ${f2(mm(w))} 0 0 ${f2(mm(h))} ${X(198.08 - w)} ${Y(10 + h)} cm /Im1 Do Q\n`;
+    }
+    if (sn.tag){
+      const wb = tw(clean(sn.tag), 11, true) / K + 5;
+      o += `0.74 w ${X(12)} ${Y(14 + 8)} ${f2(mm(wb))} ${f2(mm(8))} re S\n`;
+      o += text(sn.tag, mm(14.5), base(19.6), 11, true, 'start');
+    }
+    /* đầu phiếu: công ty / điện thoại / fax / khách hàng (nếu có) rồi Project, Item Ref; Quote Ref + Date nằm bên phải cùng hàng với 2 dòng cuối */
+    const HL = [];
+    if (sn.co) HL.push([sn.co, 13, true, 6.6]);
+    if (sn.phone) HL.push(['Phone : ' + sn.phone, 9, false, 4.71]);
+    if (sn.fax) HL.push(['Fax : ' + sn.fax, 9, false, 4.71]);
+    if (sn.cust) HL.push(['Customer : ' + sn.cust, 9, false, 4.71]);
+    HL.push(['Project : ' + sn.proj, 9, false, 4.71], ['Item Ref : ' + sn.item, 9, false, 4.71]);
+    let cy = sn.tag ? 26 : 14;
+    const bl = HL.map(([, sz, , lh]) => { const v = cy + 0.8 * sz / K; cy += lh; return v; });
+    const nL = bl.length, shift = Math.max(0, 34.24 - bl[nL - 2]);
+    HL.forEach((h, k) => { bl[k] += shift; o += text(h[0], mm(12), base(bl[k]), h[1], h[2], 'start'); });
+    o += text('Quote Ref : ' + sn.quote, mm(198.08), base(bl[nL - 2]), 9, false, 'end');
+    o += text('Date : ' + sn.date, mm(198.08), base(bl[nL - 1]), 9, false, 'end');
+    const T0 = bl[nL - 1] + 7;
+
+    const host = document.createElement('template'), geo = [];
+    for (const key of ['svg1', 'svg2']){ host.innerHTML = sn[key]; geo.push(host.content.firstElementChild); }
+    const vbOf = g => g.getAttribute('viewBox').trim().split(/\s+/).map(Number);
+    const v1 = vbOf(geo[0]), v2 = vbOf(geo[1]);
+    const FW = 92, right = 198.08, s = FW / (v1[2] + v1[0]), wMm = v1[2] * s, cl = right - wMm, fl = cl - v1[0] * s;
+    /* chú thích trên biểu đồ */
+    const LG = 7.5; let ly = T0 + 0.8 * LG / K;
+    if (sn.spec.eff){
+      const t = 'Fan Total Efficiency', xe = fl + tw(clean(t), LG, false) / K + 2;
+      o += text(t, mm(fl), base(ly), LG, false, 'start');
+      o += `0.6 w [3 1 0.6 1] 0 d ${X(xe)} ${Y(ly - 1)} m ${X(xe + 15)} ${Y(ly - 1)} l S [] 0 d\n`;
+      ly += 3.6;
+    }
+    const dw = tw(clean(sn.sub), LG, false) / K;
+    o += text(sn.sub, mm(fl), base(ly), Math.min(LG, LG * FW / dw), false, 'start');
+    const top1 = T0 + (sn.spec.eff ? 7.2 : 3.6) + 2.2, top2 = top1 + v1[3] * s, cBot = top2 + v2[3] * s;
+    o += svgToPdf(geo[0], cl, top1, wMm) + svgToPdf(geo[1], cl, top2, wMm);
+
+    /* cột trái: các khối có gạch chân (nhãn trái, giá trị căn phải, đơn vị) */
+    const sp = sn.spec, nc = sp.head.length, x0 = 12, x1 = cl - 3, unitW = 11.5, valW = nc === 1 ? 20 : 15.5, labW = x1 - x0 - unitW - nc * valW;
+    const xv = k => x1 - unitW - (nc - 1 - k) * valW;
+    const RH = 5.7, FS = 9.5;
+    const fs = Math.min(FS, (labW - 1) * K / Math.max(...sp.sections.flatMap(sc => sc.rows.map(r => tw(clean(r[0]), 1, false)))));
+    let ty = T0 + 1.5;
+    sp.sections.forEach((sc, si) => {
+      if (si) ty += 3.4;
+      const hb = ty + 0.8 * FS / K;
+      o += text(sc.h, mm(x0), base(hb), FS, false, 'start');
+      o += `0.4 w ${X(x0)} ${Y(hb + 0.9)} m ${X(x0 + tw(clean(sc.h), FS, false) / K)} ${Y(hb + 0.9)} l S\n`;
+      if (sc.dual && nc > 1) sp.head.forEach((t, k) => { o += text(t, mm(xv(k)), base(hb), 8, true, 'end'); });
+      ty += 7;
+      if (sc.model){ o += text(sc.model, mm(x0), base(ty + 0.8 * FS / K), FS, true, 'start'); ty += RH; }
+      sc.rows.forEach(r => {
+        const b = ty + 0.8 * FS / K;
+        o += text(r[0], mm(x0), base(b), fs, false, 'start');
+        r[1].forEach((v, k) => { o += text(v, mm(xv(sc.dual ? k : nc - 1)), base(b), FS, false, 'end'); });
+        o += text(r[2], mm(x1 - unitW + 1.8), base(b), 8.5, false, 'start');
+        ty += RH;
+      });
+    });
+
+    /* ghi chú cuối phiếu (xuống dòng tự động theo bề rộng trang) */
+    let ny = Math.max(ty, cBot) + 5;
+    if (sp.noise){                                    // bảng Noise Details
+      const nzb = sp.noise, NS2 = 8.5, NR = sp.head.length > 1 ? 4.8 : 5.4, lw2 = 42, cw = (198.08 - 12 - lw2) / 9, hb = ny + 0.8 * FS / K;
+      o += text('Noise Details :', mm(12), base(hb), FS, false, 'start');
+      o += `0.4 w ${X(12)} ${Y(hb + 0.9)} m ${X(12 + tw(clean('Noise Details :'), FS, false) / K)} ${Y(hb + 0.9)} l S\n`;
+      ny += 7;
+      nzb.head.forEach((h, k) => { o += text(h, mm(12 + lw2 + (k + 1) * cw - 1.5), base(ny + 0.8 * NS2 / K), NS2, true, 'end'); });
+      ny += NR;
+      nzb.rows.forEach(r => {
+        const b = ny + 0.8 * NS2 / K;
+        o += text(r[0], mm(12), base(b), NS2, false, 'start');
+        r[1].concat([r[2]]).forEach((v, k) => { o += text(v, mm(12 + lw2 + (k + 1) * cw - 1.5), base(b), NS2, k === 8, 'end'); });
+        ny += NR;
+      });
+      ny += 4;
+    } else ny += 3;
+    const NS = 8.5, wrap = str => { const out = []; for (const para of String(str).split('\n')){ let cur = '';
+      for (const w of para.trim().split(/\s+/)){ const t = cur ? cur + ' ' + w : w; if (cur && tw(clean(t), NS, false) / K > 186.08){ out.push(cur); cur = w; } else cur = t; }
+      if (cur) out.push(cur); } return out; };
+    for (const ln of wrap((sp.autoNotes || []).concat(String(sn.notes || '').split('\n').filter(t => t.trim())).join('\n'))){ if (ny > 290) break; o += text(ln, mm(12), base(ny + 0.8 * NS / K), NS, false, 'start'); ny += 4.2; }
+    return o;
+  }
+
+  function pageContent(sn, logo){ return sn.spec && sn.spec.sections ? pageContentV2(sn, logo) : pageContentOld(sn, logo); }
+  function pageContentOld(sn, logo){
     const mm = v => v * K, X = v => f2(mm(v)), Y = v => f2((297 - v) * K);
     let o = '0 G 0 g\n';
     if (logo){
@@ -952,10 +1218,31 @@ $('logoBtn').addEventListener('click', () => $('logoFile').click());$('logoDel')
     for (const key of ['svg1', 'svg2']){
       host.innerHTML = sn[key]; geo.push(host.content.firstElementChild);
     }
-    const left = 1.53, w = 200.04;
-    const s = w / +geo[0].getAttribute('viewBox').trim().split(/\s+/)[2];
-    const top1 = 59.49, top2 = top1 + +geo[0].getAttribute('viewBox').trim().split(/\s+/)[3] * s;
-    o += svgToPdf(geo[0], left, top1, w) + svgToPdf(geo[1], left, top2, w);
+    const vbOf = g => g.getAttribute('viewBox').trim().split(/\s+/).map(Number);
+    if (!sn.spec){                                    // phiếu cũ (chưa có bảng thông số): giữ bố cục cũ, biểu đồ full bề ngang
+      const left = 1.53, w = 200.04, s = w / vbOf(geo[0])[2];
+      const top1 = 59.49, top2 = top1 + vbOf(geo[0])[3] * s;
+      o += svgToPdf(geo[0], left, top1, w) + svgToPdf(geo[1], left, top2, w);
+      return o;
+    }
+    /* bố cục mới: bảng thông số bên trái, biểu đồ thu nhỏ bên phải (mép phải khung biểu đồ = mép phải thanh model) */
+    const v1 = vbOf(geo[0]), v2 = vbOf(geo[1]);
+    const FW = 111, right = 198.08, s = FW / (v1[2] + v1[0]), wMm = v1[2] * s, left = right - wMm;
+    const top1 = 59.49, top2 = top1 + v1[3] * s, bot = top2 + v2[3] * s;
+    o += svgToPdf(geo[0], left, top1, wMm) + svgToPdf(geo[1], left, top2, wMm);
+    const tx0 = 12, tx1 = left - 3, rows = (sn.spec.head ? [[''].concat(sn.spec.head)] : []).concat(sn.spec.rows), nr = rows.length, nc = rows[0].length - 1;
+    const ttop = top1 + 8 * s, rh = (bot - ttop) / nr, labW = (tx1 - tx0) * (nc === 1 ? 0.64 : 0.56), vW = (tx1 - tx0 - labW) / nc;
+    const fsz = Math.min(8.5, (labW - 3) * K / Math.max(...rows.map(r => tw(clean(r[0]), 1, false))));
+    o += `0.55 G 0.5 w ${X(tx0)} ${Y(bot)} ${f2(mm(tx1 - tx0))} ${f2(mm(bot - ttop))} re S\n`;
+    for (let r = 1; r < nr; r++) o += `${X(tx0)} ${Y(ttop + r * rh)} m ${X(tx1)} ${Y(ttop + r * rh)} l S\n`;
+    o += `${X(tx0 + labW)} ${Y(ttop)} m ${X(tx0 + labW)} ${Y(bot)} l S\n`;
+    for (let c = 1; c < nc; c++) o += `${X(tx0 + labW + c * vW)} ${Y(ttop)} m ${X(tx0 + labW + c * vW)} ${Y(bot)} l S\n`;
+    o += '0 G\n';
+    rows.forEach((r, k) => {
+      const yb = ttop + (k + 0.5) * rh + 0.34 * fsz / K, hd = sn.spec.head && k === 0;
+      if (r[0]) o += text(r[0], mm(tx0 + 2), base(yb), fsz, false, 'start');
+      for (let c = 1; c <= nc; c++) o += text(r[c], mm(tx0 + labW + (c - 0.5) * vW), base(yb), fsz, hd, 'middle');
+    });
     return o;
   }
 
@@ -1041,7 +1328,7 @@ $('logoBtn').addEventListener('click', () => $('logoFile').click());$('logoDel')
 
   /* ---- thư mục ---- */
   const KEY = 'fanFolderV1';
-  const FIELDS = ['inPrTitle','inPrUnit','inEff','inEff2','inTag','inQ2','inP2','inMotor2','inQ','inP','inPoles','inRpm','inV','inMotor','inModel','inSpeedLabel','inProj','inItem','inQuote','inDate'];
+  const FIELDS = ['inAlt','inRH','inSEo','inSEi','inDust','inClass','inMaxRpm','inNoiseAdj','inCompany','inPhone','inFax','inCustomer','inNotes','inTemp','inDia','inEff','inEff2','inTag','inQ2','inP2','inMotor2','inQ','inP','inPoles','inRpm','inV','inMotor','inModel','inSpeedLabel','inProj','inItem','inQuote','inDate'];
   let st = { folder: '', files: [] };
   try { const r = JSON.parse(localStorage.getItem(KEY) || 'null'); if (r && Array.isArray(r.files)) st = r; } catch (e) {}
   // Tên thư mục mặc định = DDT_ + ngày hôm nay theo giờ máy (không dùng toISOString vì nó tính theo UTC nên có thể lệch 1 ngày).
@@ -1071,12 +1358,12 @@ $('logoBtn').addEventListener('click', () => $('logoFile').click());$('logoDel')
 
   function snapshot(){
     const g = id => $(id).textContent;
-    return { tag: g('shTag'), proj: g('shProj'), item: g('shItem'), quote: g('shQuote'), date: g('shDate'), model: g('shModel'), rpm: g('shRpm'), sub: g('shSub'),
-      svg1: $('chPower').innerHTML, svg2: $('chPress').innerHTML };
+    return { co: g('shCo'), phone: g('shPhone'), fax: g('shFax'), cust: g('shCust'), notes: $('inNotes').value, tag: g('shTag'), proj: g('shProj'), item: g('shItem'), quote: g('shQuote'), date: g('shDate'), model: g('shModel'), rpm: g('shRpm'), sub: g('shSub'),
+      svg1: $('chPower').innerHTML, svg2: $('chPress').innerHTML, spec: specData };
   }
   function formState(){
     const o = {}; FIELDS.forEach(id => { o[id] = $(id).value; });
-    o.basis = document.querySelector('input[name=basis]:checked').value; return o;
+    o.basis = document.querySelector('input[name=basis]:checked').value; o.ftype = document.querySelector('input[name=ftype]:checked').value; return o;
   }
 
   async function savePdf(){
@@ -1103,8 +1390,6 @@ $('logoBtn').addEventListener('click', () => $('logoFile').click());$('logoDel')
   }
   const bytesOf = async blob => new Uint8Array(await blob.arrayBuffer());
 
-  /* ---- xoá cả thư mục ---- */
-  function trashFolder(){ st.files = []; persist(); view(); msg('Đã xoá toàn bộ thư mục.', ''); }
   $('btnSave').addEventListener('click', savePdf);
   $('fdName').addEventListener('input', () => { st.folder = $('fdName').value; persist(); });
   $('fdLogo').addEventListener('click', () => $('logoFile').click());
@@ -1113,8 +1398,9 @@ $('logoBtn').addEventListener('click', () => $('logoFile').click());$('logoDel')
     const i = +b.dataset.i, f = st.files[i]; if (!f) return;
     if (b.dataset.a === 'del'){ st.files.splice(i, 1); persist(); view(); msg(`Đã xoá ${f.name}.pdf.`, ''); }
     else if (b.dataset.a === 'load'){
-      for (const id of FIELDS) $(id).value = f.form[id] != null ? f.form[id] : (['inPrTitle','inPrUnit','inEff','inEff2','inTag','inQ2','inP2','inMotor2'].includes(id) ? '' : $(id).value);
+      for (const id of FIELDS) $(id).value = f.form[id] != null ? f.form[id] : (id === 'inTemp' ? '20' : ['inEff','inEff2','inTag','inQ2','inP2','inMotor2','inDia','inAlt','inRH','inSEo','inSEi','inDust','inClass','inMaxRpm','inNoiseAdj','inCompany','inPhone','inFax','inCustomer','inNotes'].includes(id) ? '' : $(id).value);
       const r = document.querySelector(`input[name=basis][value=${f.form.basis}]`); if (r) r.checked = true;
+      const rf = document.querySelector(`input[name=ftype][value=${f.form.ftype || 'centrifugal'}]`); if (rf) rf.checked = true;
       clearTimeout(timer); render(); msg(`Đã nạp lại thông số của ${f.name}. Sửa xong bấm Save PDF để thêm bản mới.`, 'ok');
     } else {
       const win = window.open('', '_blank');
@@ -1133,7 +1419,7 @@ $('logoBtn').addEventListener('click', () => $('logoFile').click());$('logoDel')
   }));
   $('fdClear').addEventListener('click', () => {
     if (!armed){ armed = true; armTimer = setTimeout(() => { armed = false; view(); }, 4000); view(); return; }
-    disarm(); view(); trashFolder();
+    disarm(); st.files = []; persist(); view(); msg('Đã xoá toàn bộ thư mục.', '');
   });
   $('logoFile').addEventListener('change', () => { logoCache = { src: null, val: null }; setTimeout(() => { $('fdLogo').hidden = true; }, 0); });
   $('logoDel').addEventListener('click', () => { logoCache = { src: null, val: null }; });
